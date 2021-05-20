@@ -6,9 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Lobby.unity
-    guid: 339dce110dde7b8498ef1ece6bd44524
+    path: Assets/FinalDemo/CustomPUNLibraries/ExampleScenes/Lobby.unity
+    guid: be9074d01359fe943b6faf71564e2776
   - enabled: 1
-    path: Assets/Scenes/Battle Scene.unity
+    path: Assets/FinalDemo/Scenes/Battle Scene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   m_configObjects: {}

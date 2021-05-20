@@ -11,7 +11,7 @@ using UnityEngine.UI;
 /// This class works as the "Launcher" for the game, manages everything lobby related
 /// </summary>
 
-public class LobbyNetwork : MonoBehaviourPunCallbacks
+public class LobbyNetwork_DEPRECTATED : MonoBehaviourPunCallbacks
 {
     [SerializeField] private Text _roomName;
     
