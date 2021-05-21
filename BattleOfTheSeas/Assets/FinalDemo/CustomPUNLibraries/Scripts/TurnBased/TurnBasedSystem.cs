@@ -28,7 +28,8 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
     [NonSerialized] public bool IsPLayerTurnOver;
     [NonSerialized] public int PlayerTurnID;
     [NonSerialized] public GameState State = GameState.IN_PROGRESS;
-    [NonSerialized] 
+
+    [NonSerialized] public int TurnNumber = 1;
 
     #endregion
 
@@ -46,8 +47,8 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
 
     #region Custom Event Callbacks
     
-    [NonSerialized] public UnityEvent OnPrepEndedCallbacks;
-    [NonSerialized] public UnityEvent OnEndTurnCallbacks;
+    [NonSerialized] public UnityEvent OnPrepEndedCallbacks = new UnityEvent();
+    [NonSerialized] public UnityEvent OnEndTurnCallbacks = new UnityEvent();
     
     #endregion
 
@@ -93,8 +94,6 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
         }
         else
         {
-            State = GameState.IN_PROGRESS;
-
             //Game always starts with host player
             PlayerTurnID = 1;
             
@@ -115,7 +114,7 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
         //Turn End Callbacks
         OnEndTurnCallbacks.Invoke();
         
-        //Relays this function call to all clients
+        //Relays to all clients that it is now the next player's turn
         photonView.RPC("NextPlayerTurn", RpcTarget.All);
     }
     public float GetRemainingTime()
@@ -149,7 +148,8 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
             PlayerTurnID = 1;
         }
 
-        //
+        TurnNumber++;
+
         if (PlayerTurnID == _localPlayerID)
             StartCoroutine(BeginTurn());
     }
@@ -159,6 +159,8 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
     #region Coroutines
     private IEnumerator BeginTurn()
     {
+        State = GameState.IN_PROGRESS;
+
         print("Player's " + _localPlayerID + " turn is starting");
 
         IsPLayerTurnOver = false;

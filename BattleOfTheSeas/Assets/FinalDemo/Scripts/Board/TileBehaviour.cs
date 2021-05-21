@@ -87,6 +87,8 @@ public class TileBehaviour : MonoBehaviourPun
 
     public void FireOnTile()
     {
+        //TODO: System that will detect what type of fire can be sent
+        
         photonView.RPC("TileHit", RpcTarget.All);
     }
     

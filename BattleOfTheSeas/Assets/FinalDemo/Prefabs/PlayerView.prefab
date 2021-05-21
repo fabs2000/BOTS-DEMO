@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6467426144892282729}
   - component: {fileID: -4927576869170255948}
   - component: {fileID: 1600213964495217793}
+  - component: {fileID: 904078438748805135}
   m_Layer: 0
   m_Name: PlayerView
   m_TagString: Untagged
@@ -110,9 +111,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d3c2523c683d904992d18b56fcc94dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerBoard: {fileID: 0}
-  EnemyBoard: {fileID: 0}
-  RotateLeft: {fileID: 0}
-  RotateRight: {fileID: 0}
-  ConfirmShip: {fileID: 0}
-  EndGame: {fileID: 0}
+  _rotLeft: {fileID: 0}
+  _rotRight: {fileID: 0}
+  _lockShips: {fileID: 0}
+  _endGame: {fileID: 0}
+--- !u!114 &904078438748805135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 538348526080838705}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e671d4aae300c1c4cac8204111fb897c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

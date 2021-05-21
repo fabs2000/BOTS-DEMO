@@ -6,7 +6,8 @@ using UnityEngine;
 using UnityEngine.Serialization;
 
 public class ShipBehavior : MonoBehaviourPun
-{ 
+{
+
     public ShipBehavior CloneShip;
     
     private TileBehaviour _tileShip;
@@ -50,9 +51,6 @@ public class ShipBehavior : MonoBehaviourPun
             
             _playerManager = FindObjectOfType<PlayerManager>();
         }
-
-        // if (!_playerManager) 
-        //     _playerManager = FindObjectOfType<PlayerManager>();
 
         if (photonView.IsMine)
         {
