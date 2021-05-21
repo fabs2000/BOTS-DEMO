@@ -36,7 +36,7 @@ public class LobbyNetwork : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        _roomDisplayTemplate = Resources.Load<GameObject>("LocalPrefabs/RoomPrefab");
+        _roomDisplayTemplate = Resources.Load<GameObject>("RoomPrefab");
         
         _defaultRoomOptions = new RoomOptions {MaxPlayers = _maxPlayers, PlayerTtl = 10000};
     }

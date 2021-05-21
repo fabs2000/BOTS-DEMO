@@ -7,6 +7,7 @@ using UnityEngine;
 public class TileBehaviour : MonoBehaviourPun
 {
     private PlayerManager _playerManager;
+    private TurnBasedSystem _turnBasedSystem;
 
     private MeshRenderer _renderer;
     private GameObject _shipRef, _missile;
@@ -30,6 +31,8 @@ public class TileBehaviour : MonoBehaviourPun
 
     void Start()
     {
+        _turnBasedSystem = TurnBasedSystem.Instance;
+
         _renderer = GetComponent<MeshRenderer>();
 
         _missile = transform.GetChild(0).gameObject;
@@ -97,7 +100,6 @@ public class TileBehaviour : MonoBehaviourPun
         Vector3 tilePos = transform.position;
         ShipBehavior ship = _playerManager.SelectedShip;
         
-        
         //Set ship position
         ship.TileShip = this;
         ship.transform.position = tilePos;
@@ -111,25 +113,26 @@ public class TileBehaviour : MonoBehaviourPun
         if (_tileShot) 
             return;
         
+        // This is messy but it is due to the "PlayerManager" object not being initialized for some reason.
         if (!_playerManager) 
             _playerManager = FindObjectOfType<PlayerManager>();
         
-        
-        if (GameManager.Instance.State == GameManager.GameState.IN_PROGRESS)
+        //<<MAIN GAMEPLAY LOOP>>//
+        if (_turnBasedSystem.State == TurnBasedSystem.GameState.IN_PROGRESS)
         {
-            if (_playerManager.ThisPlayerTurn)
+            if (!_turnBasedSystem.IsPLayerTurnOver)
             {
                 //Firing interaction
                 FireOnTile();
                 _parentGrid.ReplicateFire(_tileID);
 
                 //Swap player turn
-                _playerManager.FinishTurn();
+                _turnBasedSystem.EndPlayerTurn();
             }
             else
                 Debug.Log("Not this player's turn yet!");
         }
-        else if (GameManager.Instance.State == GameManager.GameState.PREPARATION)
+        else if (_turnBasedSystem.State == TurnBasedSystem.GameState.PREPARATION)
         {
             if (_playerManager.SelectedShip)
             {
@@ -142,7 +145,7 @@ public class TileBehaviour : MonoBehaviourPun
     }
     private void OnMouseEnter()
     {
-        if (!_tileShot && GameManager.Instance.State != GameManager.GameState.ENEMY_WON)
+        if (!_tileShot && _turnBasedSystem.State != TurnBasedSystem.GameState.OTHER_WON)
         {
             ChangeTileColor(ColorToVec3(Color.yellow));
             //photonView.RPC("ChangeTileColor", RpcTarget.All, ColorToVec3(Color.yellow));
@@ -150,7 +153,7 @@ public class TileBehaviour : MonoBehaviourPun
     }
     private void OnMouseExit()
     {
-        if (!_tileShot && GameManager.Instance.State != GameManager.GameState.ENEMY_WON)
+        if (!_tileShot && _turnBasedSystem.State != TurnBasedSystem.GameState.OTHER_WON)
         {
             ChangeTileColor(ColorToVec3(Color.blue));
             //photonView.RPC("ChangeTileColor", RpcTarget.All, ColorToVec3(Color.blue));

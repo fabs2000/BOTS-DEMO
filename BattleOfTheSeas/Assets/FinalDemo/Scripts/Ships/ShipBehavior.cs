@@ -30,7 +30,7 @@ public class ShipBehavior : MonoBehaviourPun
         {
             if (Input.GetMouseButtonDown(1))
             {
-                if (_playerManager.SelectedShip == this && GameManager.Instance.State == GameManager.GameState.PREPARATION)
+                if (_playerManager.SelectedShip == this && TurnBasedSystem.Instance.State == TurnBasedSystem.GameState.PREPARATION)
                 {
                     transform.SetPositionAndRotation(_startPos, Quaternion.identity);
                 }

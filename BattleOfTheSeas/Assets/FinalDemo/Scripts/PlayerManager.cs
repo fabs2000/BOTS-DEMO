@@ -11,6 +11,8 @@ using Random = UnityEngine.Random;
 
 public class PlayerManager : MonoBehaviourPun
 {
+    private TurnBasedSystem _turnBasedSystem;
+    
     private GameObject _playerBoard;
     private GameObject _enemyBoard;
 
@@ -26,12 +28,16 @@ public class PlayerManager : MonoBehaviourPun
     private ShipBehavior _selectedShip;
     public ShipBehavior SelectedShip => _selectedShip;
     
-    private bool _thisPlayerTurn = false;
-    public bool ThisPlayerTurn => _thisPlayerTurn;
+    // private bool _thisPlayerTurn = false;
+    // public bool ThisPlayerTurn => _thisPlayerTurn;
 
     #region MonoBehaviourCallbacks
     private void Start()
     {
+        _turnBasedSystem = TurnBasedSystem.Instance;
+
+        _turnBasedSystem.OnPrepEndedCallbacks.AddListener(() => LockShips());
+        
         if (_rotLeft && _rotRight && _lockShips && _endGame)
         {
             _rotLeft.onClick.AddListener(() => RotateShip(-1));
@@ -75,7 +81,7 @@ public class PlayerManager : MonoBehaviourPun
             Debug.Log("enemy ships now: " + _enemyGrid.Ships.Count);
             if (_enemyGrid.Ships.Count <= 0)
             {
-                GameManager.Instance.State = GameManager.GameState.PLAYER_WON;
+                TurnBasedSystem.Instance.State = TurnBasedSystem.GameState.LOCAL_WON;
             }
         }
         else if (_selfGrid.FindShipToRemove(ship))
@@ -83,49 +89,49 @@ public class PlayerManager : MonoBehaviourPun
             Debug.Log("player ships now: " + _selfGrid.Ships.Count);
             if (_selfGrid.Ships.Count <= 0)
             {
-                GameManager.Instance.State = GameManager.GameState.ENEMY_WON;
+                TurnBasedSystem.Instance.State = TurnBasedSystem.GameState.OTHER_WON;
             }
         }
     }
 
-    public void StartTurn()
-    {
-        photonView.RPC("SetTurn", RpcTarget.Others, false);
-        SetTurn(true);
-    }
-    
-    public void FinishTurn()
-    {
-        photonView.RPC("SetTurn", RpcTarget.Others, true);
-        SetTurn(false);
-    }
-
-    //RPC
-    [PunRPC]
-    private void SetTurn(bool turn)
-    {
-        _thisPlayerTurn = turn;
-    }
+    // public void StartTurn()
+    // {
+    //     photonView.RPC("SetTurn", RpcTarget.Others, false);
+    //     SetTurn(true);
+    // }
+    //
+    // public void FinishTurn()
+    // {
+    //     photonView.RPC("SetTurn", RpcTarget.Others, true);
+    //     SetTurn(false);
+    // }
+    //
+    // //RPC
+    // [PunRPC]
+    // private void SetTurn(bool turn)
+    // {
+    //     _thisPlayerTurn = turn;
+    // }
 
     //private functions
     private IEnumerator GameStateActions()
     {
         while(true)
         {
-            if (!GameManager.Instance) yield return null;
+            if (!_turnBasedSystem) yield return null;
 
-            switch (GameManager.Instance.State)
+            switch (_turnBasedSystem.State)
             {
-                case GameManager.GameState.PLAYER_WON:
+                case TurnBasedSystem.GameState.LOCAL_WON:
                     _endText.text = "YOU WON";
-                    _endGame.gameObject.SetActive(true);
-                    
+                    MenuManager.Instance.OpenMenu("EndGame");
+
                     StopAllCoroutines();
                     break;
 
-                case GameManager.GameState.ENEMY_WON:
+                case TurnBasedSystem.GameState.OTHER_WON:
                     _endText.text = "ENEMY WON";
-                    _endGame.gameObject.SetActive(true);
+                    MenuManager.Instance.OpenMenu("EndGame");
 
                     StopAllCoroutines();
                     break;
@@ -146,12 +152,14 @@ public class PlayerManager : MonoBehaviourPun
     
     private void LockShips()
     {
+        //If button has already been diasbled, don't call function again
+        if (!_lockShips.IsInteractable())
+            return;
+            
         //Disables UI Buttons
         _rotLeft.interactable = false;
         _rotRight.interactable = false;
         _lockShips.interactable = false;
-        
-        GameManager.Instance.State = GameManager.GameState.IN_PROGRESS;
 
         //Disables raycast for enemy ships, enables for tiles
         _enemyGrid.SetShipLayer(2);
@@ -166,9 +174,6 @@ public class PlayerManager : MonoBehaviourPun
 
         //Disables ship
         _selectedShip = null;
-        
-        //Starts turn for player
-        StartTurn();
     }
     
     #endregion

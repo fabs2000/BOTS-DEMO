@@ -6,6 +6,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Events;
 using Random = UnityEngine.Random;
 
 public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
@@ -22,11 +23,12 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
     
     #region Public Variables
     
-    public bool HasPreparationStage;
+    public bool HasPreparationStage = true;
     
     [NonSerialized] public bool IsPLayerTurnOver;
     [NonSerialized] public int PlayerTurnID;
     [NonSerialized] public GameState State = GameState.IN_PROGRESS;
+    [NonSerialized] 
 
     #endregion
 
@@ -42,11 +44,29 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
 
     #endregion
 
+    #region Custom Event Callbacks
+    
+    [NonSerialized] public UnityEvent OnPrepEndedCallbacks;
+    [NonSerialized] public UnityEvent OnEndTurnCallbacks;
+    
+    #endregion
+
     #region MonoBehaviourCallbacks
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
+
     private void Start()
     {
-        Instance = this;
-        
         print(PhotonNetwork.LocalPlayer.ActorNumber);
         _localPlayerID = PhotonNetwork.LocalPlayer.ActorNumber;
 
@@ -67,14 +87,14 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
     #region PublicFunctions
     public void BeginGame()
     {
-        State = GameState.IN_PROGRESS;
-
         if (HasPreparationStage)
         {
             StartCoroutine(BeginPreparation());
         }
         else
         {
+            State = GameState.IN_PROGRESS;
+
             //Game always starts with host player
             PlayerTurnID = 1;
             
@@ -83,10 +103,6 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
             //Function begins game
             if (PlayerTurnID == _localPlayerID)
                 StartCoroutine(BeginTurn());
-            else
-            {
-                
-            }
         }
     }
     public void EndPlayerTurn()
@@ -95,6 +111,9 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
         
         _remainingTurnDuration = _turnDuration;
         IsPLayerTurnOver = true;
+        
+        //Turn End Callbacks
+        OnEndTurnCallbacks.Invoke();
         
         //Relays this function call to all clients
         photonView.RPC("NextPlayerTurn", RpcTarget.All);
@@ -121,8 +140,8 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (PlayerTurnID < PhotonNetwork.CurrentRoom.MaxPlayers)
         {
+            //Set the turn for the next player in line
             PlayerTurnID++;
-            print("Moved to next player: " + PlayerTurnID);
         }
         else
         {
@@ -130,6 +149,7 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
             PlayerTurnID = 1;
         }
 
+        //
         if (PlayerTurnID == _localPlayerID)
             StartCoroutine(BeginTurn());
     }
@@ -141,17 +161,14 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
     {
         print("Player's " + _localPlayerID + " turn is starting");
 
-        //yield return new WaitForSeconds(3f);
-
         IsPLayerTurnOver = false;
         while (!IsPLayerTurnOver)
         {
             _remainingTurnDuration -= Time.deltaTime;
             
             if (_remainingTurnDuration <= 0)
-            {
                 EndPlayerTurn();
-            }
+            
             yield return new WaitForSeconds(Time.deltaTime);
         }
         yield return null;
@@ -159,9 +176,6 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
     private IEnumerator BeginPreparation()
     {
         State = GameState.PREPARATION;
-        
-        //print("Preparation stage will begin shortly!");
-        //yield return new WaitForSeconds(3f);
 
         print("Preparation has begun!");
 
@@ -173,7 +187,10 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
             {
                 HasPreparationStage = false;
                 _remainingPrepDuration = 0f;
-
+                
+                //Preparation end Callbacks
+                OnPrepEndedCallbacks.Invoke();
+                
                 BeginGame();
             }
             yield return new WaitForSeconds(Time.deltaTime);
@@ -189,11 +206,13 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
         if (stream.IsWriting)
         {
             stream.SendNext(_remainingPrepDuration);
+            stream.SendNext(HasPreparationStage);
             //stream.SendNext(_remainingTurnDuration);
         }
         else
         {
             _remainingPrepDuration = (float)stream.ReceiveNext();
+            HasPreparationStage = (bool) stream.ReceiveNext();
             //_remainingTurnDuration = (float)stream.ReceiveNext();
         }
     }

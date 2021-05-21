@@ -37,19 +37,6 @@ public class GameNetwork : MonoBehaviourPunCallbacks
                 _HUD.SetActive(true);
                 _Waiting.SetActive(false);
 
-                // if (PhotonNetwork.IsMasterClient)
-                // {
-                //     //Debug.LogFormat("We are Instantiating HostPlayer at pos: " + _spawnPoints[0].position, SceneManagerHelper.ActiveSceneName);
-                //
-                //     Instantiate(_playerPrefab, _spawnPoints[0].position, _spawnPoints[0].rotation);
-                // }
-                // else
-                // {
-                //     //Debug.LogFormat("We are Instantiating GuestPlayer at pos: " + _spawnPoints[1].position, SceneManagerHelper.ActiveSceneName);
-                //
-                //     Instantiate(_playerPrefab, _spawnPoints[1].position, _spawnPoints[1].rotation);
-                // }
-
                 Transform playerTrasf = _player.transform;
                 
                 

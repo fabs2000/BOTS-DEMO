@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -23,7 +24,8 @@ public class GridBehaviour : MonoBehaviour
     public TileBehaviour[] Tiles => _tiles;
 
     #endregion
-    
+
+    #region MonoBehaviour Callbacks
     private void Start()
     {
         _tiles = gameObject.GetComponentsInChildren<TileBehaviour>();
@@ -36,6 +38,9 @@ public class GridBehaviour : MonoBehaviour
         }
     }
     
+    #endregion
+
+    #region Public Functions
     //Adjustments
     public void SetTilesLayer(int layer)
     {
@@ -102,5 +107,6 @@ public class GridBehaviour : MonoBehaviour
         }
     }
 
-
+    #endregion
+    
 }

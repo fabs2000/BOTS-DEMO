@@ -7,13 +7,12 @@ using UnityEngine.Events;
 
 public class CheckFullRoom : MonoBehaviourPunCallbacks
 {
-    [SerializeField]private List<UnityEvent> BeginGameActions;
+    [SerializeField]private UnityEvent BeginGameActions;
     
     void Start()
     {
         StartCoroutine(CheckPlayersEntered());
     }
-
     private IEnumerator CheckPlayersEntered()
     {
         while (true)
@@ -22,13 +21,9 @@ public class CheckFullRoom : MonoBehaviourPunCallbacks
             {
                 TurnBasedSystem.Instance.BeginGame();
 
-                // This loops over whatever actions the game needs to go through
-                // apart from calling begin on the turn system
-                foreach (var action in BeginGameActions)
-                {
-                    action.Invoke();
-                }
-                
+                // This calls whatever actions the game needs to go through at the beginning
+                BeginGameActions.Invoke();
+
                 StopAllCoroutines();
             }
             else
