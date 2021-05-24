@@ -10,10 +10,11 @@ public class ShipHealth : MonoBehaviour
     public int _armor = 0;
 
     private PlayerManager _manager;
-
+    private GameObject _shipMesh;
     private void Start()
     {
         _manager = FindObjectOfType<PlayerManager>();
+        _shipMesh = transform.GetChild(0).gameObject;
     }
 
     public void ShipHit()
@@ -30,7 +31,8 @@ public class ShipHealth : MonoBehaviour
             if (_shipHealth <= 0)
             {
                 _manager.RemoveShipFromGrid(gameObject);
-                transform.GetChild(0).gameObject.SetActive(true);
+                
+                _shipMesh.SetActive(true);
             }
         }
     }

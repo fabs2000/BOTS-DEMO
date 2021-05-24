@@ -79,12 +79,12 @@ public class GridBehaviour : MonoBehaviour
     }
 
     //Replicating interactions
-    public void ReplicateFire(int tileID)
+    public void ReplicateTileAction(int tileID)
     {
         TileBehaviour tileToFire = FindCloneTile(tileID);
         
         if(tileToFire)
-            tileToFire.FireOnTile();
+            tileToFire.TileAction();
     }
 
     public void ReplicateShips()

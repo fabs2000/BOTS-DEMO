@@ -39,4 +39,14 @@ public class MenuManager : MonoBehaviour
     {
         menu.Close();
     }
+
+    public Menu GetMenu(string menuName)
+    {
+        Menu menuFound = Array.Find(_menus, menu => menu.MenuName == menuName);
+
+        if (menuFound)
+            return menuFound;
+        else
+            return null;
+    }
 }
