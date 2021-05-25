@@ -16,9 +16,9 @@ public class PlayerManager : MonoBehaviourPun
         AIR_ATTACKS = 0,
         TORPEDO = 1,
         PIERCE_MISSILE = 2,
-        BASIC_FIRE = 3,
-        PROTECTIVE_DOME = 4,
-        REPAIR = 5
+        PROTECTIVE_DOME = 3,
+        REPAIR = 4,
+        BASIC_FIRE = 5
     }
     
     #region HUDVariables
@@ -45,12 +45,16 @@ public class PlayerManager : MonoBehaviourPun
     #region Public
 
     public ActionType Action => _actionType;
-    public ShipBehavior SelectedShip => _selectedShip;
+    public ShipBehavior SelectedShip
+    {
+        get => _selectedShip;
+        set => _selectedShip = value;
+    }
+    public GridBehaviour SelfGrid => _selfGrid;
 
     #endregion
 
     #region MonoBehaviourCallbacks
-
     private void Start()
     {
         _turnBasedSystem = TurnBasedSystem.Instance;
@@ -76,9 +80,7 @@ public class PlayerManager : MonoBehaviourPun
 
     #endregion
 
-    #region Custom
-
-    //Public
+    #region Public Functions
     public void SetBoards(GameObject board1, GameObject board2)
     {
         _playerBoard = board1;
@@ -91,69 +93,29 @@ public class PlayerManager : MonoBehaviourPun
         }
     }
 
-    public void SetActiveShip(ShipBehavior ship)
-    {
-        _selectedShip = ship;
-    }
-
-    public void RemoveShipFromGrid(GameObject ship)
-    {
-        if (_enemyGrid.FindShipToRemove(ship))
-        {
-            //Debug.Log("enemy ships now: " + _enemyGrid.Ships.Count);
-            if (_enemyGrid.Ships.Count <= 0)
-            {
-                TurnBasedSystem.Instance.State = TurnBasedSystem.GameState.LOCAL_WON;
-            }
-        }
-        else if (_selfGrid.FindShipToRemove(ship))
-        {
-            //Debug.Log("player ships now: " + _selfGrid.Ships.Count);
-            if (_selfGrid.Ships.Count <= 0)
-            {
-                TurnBasedSystem.Instance.State = TurnBasedSystem.GameState.OTHER_WON;
-            }
-        }
-    }
-
     public void SetActionType(int newActionType)
     {
         _actionType = (ActionType) newActionType;
     }
 
-    public void ManageTileActions(int tileId)
+    public void ManageTileActions(TileBehaviour tile)
     {
-        switch (_actionType)
+        if (_actionType == ActionType.BASIC_FIRE)
         {
-            //Attacking Actions
-            case ActionType.BASIC_FIRE:
-                print("Basic");
-                break;
-
-            case ActionType.AIR_ATTACKS:
-                print("Air");
-                break;
-
-            case ActionType.TORPEDO:
-                print("Torpedo");
-                break;
-
-            case ActionType.PIERCE_MISSILE:
-                print("Pierce");
-                break;
-
-            //Defensive Actions
-            case ActionType.PROTECTIVE_DOME:
-                print("Dome");
-                break;
-
-            case ActionType.REPAIR:
-                print("Repair");
-                break;
+            //If the attack is the basic fire attack then the rest of the function can be skipped
+            tile.BasicAttack();
+            return;
         }
+        
+        ShipBehavior attackingShip = DetermineAttack();
+        
+        //Depending on the derived class that the ship is, it will perform the specific action
+        attackingShip.ShipAction(tile);
     }
+    
+    #endregion
 
-    //private functions
+    #region Private Functions
     private IEnumerator GameStateActions()
     {
         while (true)
@@ -181,6 +143,19 @@ public class PlayerManager : MonoBehaviourPun
         }
     }
 
+    private ShipBehavior DetermineAttack()
+    {
+        foreach (var ship in _selfGrid.Ships)
+        {
+            if ((int)_actionType == (int)ship.ShipClass)
+            {
+                return ship;
+            }
+        }
+
+        return null;
+    }
+
     #endregion
 
     #region UI
@@ -194,16 +169,15 @@ public class PlayerManager : MonoBehaviourPun
     {
         MenuManager.Instance.OpenMenu("InGameHUD");
 
-        //Disables raycast for enemy ships, enables for tiles
-        _enemyGrid.SetShipLayer(2);
+        //Enables raycast for tiles
         _enemyGrid.SetTilesLayer(0);
 
         //Disables raycast for player ships and tiles
         _selfGrid.SetTilesLayer(2);
-        _selfGrid.SetTilesLayer(2);
+        _selfGrid.SetShipLayer(2);
 
         //Set clone ship transforms
-        _selfGrid.ReplicateShips();
+        _selfGrid.ReplicateShipTransforms();
 
         //Disables ship
         _selectedShip = null;

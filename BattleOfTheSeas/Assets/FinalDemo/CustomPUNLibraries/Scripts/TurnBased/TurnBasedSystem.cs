@@ -11,8 +11,6 @@ using Random = UnityEngine.Random;
 
 public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
 {
-    static public TurnBasedSystem Instance;
-    
     public enum GameState
     {
         PREPARATION,
@@ -22,6 +20,8 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
     }
     
     #region Public Variables
+    
+    static public TurnBasedSystem Instance;
     
     public bool HasPreparationStage = true;
     
@@ -53,7 +53,6 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
     #endregion
 
     #region MonoBehaviourCallbacks
-
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -65,7 +64,6 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
             Instance = this;
         }
     }
-
     private void Start()
     {
         print(PhotonNetwork.LocalPlayer.ActorNumber);
@@ -74,15 +72,7 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
         _remainingPrepDuration = _prepStateDuration;
         _remainingTurnDuration = _turnDuration;
     }
-
-    private void Update()
-    {
-        if (State == GameState.IN_PROGRESS && IsPLayerTurnOver)
-        {
-            
-        }
-    }
-
+    
     #endregion
     
     #region PublicFunctions
@@ -134,6 +124,7 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
     #endregion
 
     #region PrivateFunctions
+    
     [PunRPC]
     private void NextPlayerTurn()
     {

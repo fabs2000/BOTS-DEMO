@@ -8,17 +8,21 @@ using UnityEngine.Serialization;
 
 public class GridBehaviour : MonoBehaviour
 {
+
+    #region PublicVariables
+
+    public List<ShipBehavior> Ships => _shipBehaviors;
+    
+    #endregion
+    
     #region Serialized
 
     [SerializeField] private GridBehaviour _otherBoard;
-
-    public List<GameObject> Ships;
-    
     [SerializeField] private List<ShipBehavior> _shipBehaviors;
     
     #endregion
 
-    #region Privates
+    #region PrivatesVariables
 
     private TileBehaviour[] _tiles;
     public TileBehaviour[] Tiles => _tiles;
@@ -41,7 +45,7 @@ public class GridBehaviour : MonoBehaviour
     #endregion
 
     #region Public Functions
-    //Adjustments
+    //Layer Management
     public void SetTilesLayer(int layer)
     {
         foreach (var tile in _tiles)
@@ -52,9 +56,9 @@ public class GridBehaviour : MonoBehaviour
     
     public void SetShipLayer(int layer)
     {
-        foreach (var ship in Ships)
+        foreach (var ship in _shipBehaviors)
         {
-            ship.layer = layer;
+            ship.gameObject.layer = layer;
         }
     }
     
@@ -64,18 +68,24 @@ public class GridBehaviour : MonoBehaviour
     }
 
     //Mid Game Functions
-    public bool FindShipToRemove(GameObject otherShip)
+    public void RemoveShipFromGrid(ShipBehavior ship)
     {
-        GameObject shipToRemove = null;
-        shipToRemove = Ships.Find(ship => ship == otherShip); 
-        
-        if (shipToRemove)
+        if (_otherBoard.FindShipToRemove(ship))
         {
-            Ships.Remove(shipToRemove);
-            return true;
+            //Debug.Log("enemy ships now: " + _enemyGrid.Ships.Count);
+            if (_otherBoard._shipBehaviors.Count <= 0)
+            {
+                TurnBasedSystem.Instance.State = TurnBasedSystem.GameState.LOCAL_WON;
+            }
         }
-        
-        return false;
+        else if (FindShipToRemove(ship))
+        {
+            //Debug.Log("player ships now: " + _selfGrid.Ships.Count);
+            if (_shipBehaviors.Count <= 0)
+            {
+                TurnBasedSystem.Instance.State = TurnBasedSystem.GameState.OTHER_WON;
+            }
+        }
     }
 
     //Replicating interactions
@@ -87,7 +97,7 @@ public class GridBehaviour : MonoBehaviour
             tileToFire.TileAction();
     }
 
-    public void ReplicateShips()
+    public void ReplicateShipTransforms()
     {
         foreach (var ship in _shipBehaviors)
         {
@@ -108,5 +118,22 @@ public class GridBehaviour : MonoBehaviour
     }
 
     #endregion
-    
+
+    #region Private Functions
+
+    private bool FindShipToRemove(ShipBehavior otherShip)
+    {
+        ShipBehavior shipToRemove = _shipBehaviors.Find(ship => ship == otherShip); 
+        
+        if (shipToRemove)
+        {
+            _shipBehaviors.Remove(shipToRemove);
+            
+            return true;
+        }
+        
+        return false;
+    }
+
+    #endregion
 }

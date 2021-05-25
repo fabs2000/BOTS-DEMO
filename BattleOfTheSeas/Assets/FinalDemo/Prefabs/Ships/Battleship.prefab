@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4291612561408622614}
   - component: {fileID: 1126080536669366799}
   - component: {fileID: -2662062113588592739}
-  - component: {fileID: 2655258985869224094}
+  - component: {fileID: -3751594218145716466}
   - component: {fileID: 7799283333823705734}
   - component: {fileID: 4000916752086903984}
   - component: {fileID: 7648646823363145639}
@@ -66,7 +66,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &2655258985869224094
+--- !u!114 &-3751594218145716466
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -75,9 +75,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3514230814129642156}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a0826a65ab14cd3428dd6d1fe906fe61, type: 3}
+  m_Script: {fileID: 11500000, guid: 7bbad0cc15537ab47ad79867f7ac3034, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CloneShip: {fileID: 0}
+  ShipClass: 3
 --- !u!114 &7799283333823705734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -91,7 +93,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _shipHealth: 4
-  _manager: {fileID: 0}
 --- !u!114 &4000916752086903984
 MonoBehaviour:
   m_ObjectHideFlags: 0

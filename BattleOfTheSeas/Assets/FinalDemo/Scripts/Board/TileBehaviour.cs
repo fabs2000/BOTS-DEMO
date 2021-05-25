@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class TileBehaviour : MonoBehaviourPun
 {
+    #region PrivateVariables
+
     private PlayerManager _playerManager;
     private TurnBasedSystem _turnBasedSystem;
 
@@ -13,21 +15,28 @@ public class TileBehaviour : MonoBehaviourPun
     private GameObject _shipRef, _missile;
 
     private GridBehaviour _parentGrid;
-
-    public GridBehaviour ParentGrid
-    {
-        set => _parentGrid = value;
-    }
-
+    
     private bool _tileShot = false;
     private int _tileID;
+    
+    #endregion
 
+    #region Public Variables
+    
+    public GridBehaviour ParentGrid
+    {
+        get => _parentGrid;
+        set => _parentGrid = value;
+    }
+    
     public int TileID
     {
         get => _tileID;
         set => _tileID = value;
     }
 
+    #endregion
+    
     #region MonoBehaviourCallbacks
     void Start()
     {
@@ -47,17 +56,57 @@ public class TileBehaviour : MonoBehaviourPun
         if (other.CompareTag("Ship"))
             _shipRef = null;
     }
+    private void OnMouseDown()
+    {
+        if (_tileShot)
+            return;
 
-    #endregion
+        // This is messy but it is due to the "PlayerManager" object not being initialized for some reason.
+        if (!_playerManager)
+            _playerManager = FindObjectOfType<PlayerManager>();
 
-    #region RPC
+        //<<MAIN GAMEPLAY LOOP>>//
+        if (_turnBasedSystem.State == TurnBasedSystem.GameState.IN_PROGRESS &&
+            !_turnBasedSystem.IsPLayerTurnOver)
+        {
+            //Player Actions on Selected Tile
+            photonView.RPC("TileAction", RpcTarget.All);
+
+            //Swap player turn
+            _turnBasedSystem.EndPlayerTurn();
+        }
+        else if (_turnBasedSystem.State == TurnBasedSystem.GameState.PREPARATION)
+        {
+            if (_playerManager.SelectedShip)
+                PlaceShip();
+            else
+                Debug.Log("No Ship selected!");
+        }
+    }
+    private void OnMouseEnter()
+    {
+        if (!_tileShot && _turnBasedSystem.State != TurnBasedSystem.GameState.OTHER_WON)
+        {
+            ChangeTileColor(ColorToVec3(Color.yellow));
+        }
+    }
+    private void OnMouseExit()
+    {
+        if (!_tileShot && _turnBasedSystem.State != TurnBasedSystem.GameState.OTHER_WON)
+        {
+            ChangeTileColor(ColorToVec3(Color.blue));
+        }
+    }
     
     #endregion
 
     #region Public Functions
-
+    
     public void BasicAttack()
     {
+        if(_tileShot)
+            return;
+
         if (_missile)
             _missile.SetActive(true);
 
@@ -72,6 +121,11 @@ public class TileBehaviour : MonoBehaviourPun
         }
         
         _tileShot = true;
+    }
+
+    public void TileDefended()
+    {
+        
     }
 
     #endregion
@@ -101,52 +155,17 @@ public class TileBehaviour : MonoBehaviourPun
 
     #endregion
 
-    #region MouseInteractions
-    private void OnMouseDown()
+    #region RPC
+
+    [PunRPC]
+    public void TileAction()
     {
-        if (_tileShot)
-            return;
-
-        // This is messy but it is due to the "PlayerManager" object not being initialized for some reason.
-        if (!_playerManager)
-            _playerManager = FindObjectOfType<PlayerManager>();
-
-
-        //<<MAIN GAMEPLAY LOOP>>//
-        if (_turnBasedSystem.State == TurnBasedSystem.GameState.IN_PROGRESS &&
-            !_turnBasedSystem.IsPLayerTurnOver)
+        if (_playerManager)
         {
-            //Player Actions on Selected Tile
-            _playerManager.ManageTileActions(_tileID);
+            _playerManager.ManageTileActions(this);
             _parentGrid.ReplicateTileAction(_tileID);
-
-            //Swap player turn
-            _turnBasedSystem.EndPlayerTurn();
-        }
-        else if (_turnBasedSystem.State == TurnBasedSystem.GameState.PREPARATION)
-        {
-            if (_playerManager.SelectedShip)
-                PlaceShip();
-            else
-                Debug.Log("No Ship selected!");
         }
     }
-
-    private void OnMouseEnter()
-    {
-        if (!_tileShot && _turnBasedSystem.State != TurnBasedSystem.GameState.OTHER_WON)
-        {
-            ChangeTileColor(ColorToVec3(Color.yellow));
-        }
-    }
-
-    private void OnMouseExit()
-    {
-        if (!_tileShot && _turnBasedSystem.State != TurnBasedSystem.GameState.OTHER_WON)
-        {
-            ChangeTileColor(ColorToVec3(Color.blue));
-        }
-    }
-
+    
     #endregion
 }
