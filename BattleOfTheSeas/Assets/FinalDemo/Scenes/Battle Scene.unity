@@ -615,18 +615,20 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 50
-    m_FontStyle: 0
+    m_FontSize: 150
+    m_FontStyle: 1
     m_BestFit: 0
-    m_MinSize: 5
-    m_MaxSize: 50
+    m_MinSize: 0
+    m_MaxSize: 150
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 
+  m_Text: '
+
+'
 --- !u!222 &183894693
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -740,18 +742,20 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 40
-    m_FontStyle: 0
+    m_FontSize: 150
+    m_FontStyle: 1
     m_BestFit: 0
-    m_MinSize: 4
-    m_MaxSize: 50
+    m_MinSize: 0
+    m_MaxSize: 150
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 
+  m_Text: '
+
+'
 --- !u!222 &282889081
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2000,6 +2004,7 @@ GameObject:
   - component: {fileID: 563721017}
   - component: {fileID: 563721016}
   - component: {fileID: 563721015}
+  - component: {fileID: 563721018}
   m_Layer: 5
   m_Name: RepairShip
   m_TagString: Untagged
@@ -2133,6 +2138,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 563721013}
   m_CullTransparentMesh: 1
+--- !u!114 &563721018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 563721013}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5603d9278ef30b640a453633029fe3be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _parentShip: {fileID: -7667248086610844366, guid: 8e23b60ebe1a12e4384a129827abdda8, type: 3}
 --- !u!1001 &583307965
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2587,7 +2605,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &801187988
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2800,6 +2818,7 @@ GameObject:
   - component: {fileID: 838603876}
   - component: {fileID: 838603875}
   - component: {fileID: 838603874}
+  - component: {fileID: 838603877}
   m_Layer: 5
   m_Name: AirAttack
   m_TagString: Untagged
@@ -2933,6 +2952,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 838603872}
   m_CullTransparentMesh: 1
+--- !u!114 &838603877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 838603872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5603d9278ef30b640a453633029fe3be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _parentShip: {fileID: 3580468837682325003, guid: 671a2bcf534205f479e4b910e3883528, type: 3}
 --- !u!43 &853932182
 Mesh:
   m_ObjectHideFlags: 0
@@ -3647,6 +3679,7 @@ GameObject:
   - component: {fileID: 926745650}
   - component: {fileID: 926745649}
   - component: {fileID: 926745648}
+  - component: {fileID: 926745651}
   m_Layer: 5
   m_Name: ProtectiveDome
   m_TagString: Untagged
@@ -3780,6 +3813,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 926745646}
   m_CullTransparentMesh: 1
+--- !u!114 &926745651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 926745646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5603d9278ef30b640a453633029fe3be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _parentShip: {fileID: -3751594218145716466, guid: 5f6cb5217cfc8fd41bde15eb325120e4, type: 3}
 --- !u!1 &941182295 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8874368982167263689, guid: 8e23b60ebe1a12e4384a129827abdda8, type: 3}
@@ -4089,18 +4135,20 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 40
-    m_FontStyle: 0
+    m_FontSize: 150
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 0
-    m_MaxSize: 50
+    m_MaxSize: 150
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 
+  m_Text: '
+
+'
 --- !u!222 &993705989
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4434,6 +4482,7 @@ GameObject:
   - component: {fileID: 1028958569}
   - component: {fileID: 1028958568}
   - component: {fileID: 1028958567}
+  - component: {fileID: 1028958570}
   m_Layer: 5
   m_Name: Torpedo
   m_TagString: Untagged
@@ -4567,6 +4616,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1028958565}
   m_CullTransparentMesh: 1
+--- !u!114 &1028958570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1028958565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5603d9278ef30b640a453633029fe3be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _parentShip: {fileID: -3951515965655183760, guid: 4632736b7279f3143aec537916beaf34, type: 3}
 --- !u!1001 &1036807390
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7491,7 +7553,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 
+  m_Text: '
+
+'
 --- !u!222 &1170613568
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7993,6 +8057,7 @@ GameObject:
   - component: {fileID: 1388331477}
   - component: {fileID: 1388331476}
   - component: {fileID: 1388331475}
+  - component: {fileID: 1388331478}
   m_Layer: 5
   m_Name: PiercingMissile
   m_TagString: Untagged
@@ -8126,6 +8191,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1388331473}
   m_CullTransparentMesh: 1
+--- !u!114 &1388331478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1388331473}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5603d9278ef30b640a453633029fe3be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _parentShip: {fileID: -4068201613604119606, guid: e9b5fbd7c27832549a5df5a0bcc89488, type: 3}
 --- !u!1001 &1394873653
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12400,18 +12478,20 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 40
-    m_FontStyle: 0
+    m_FontSize: 150
+    m_FontStyle: 1
     m_BestFit: 0
-    m_MinSize: 4
-    m_MaxSize: 50
+    m_MinSize: 0
+    m_MaxSize: 150
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 
+  m_Text: '
+
+'
 --- !u!222 &1563841505
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -13456,18 +13536,20 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 50
-    m_FontStyle: 0
+    m_FontSize: 150
+    m_FontStyle: 1
     m_BestFit: 0
-    m_MinSize: 5
-    m_MaxSize: 50
+    m_MinSize: 0
+    m_MaxSize: 150
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 
+  m_Text: '
+
+'
 --- !u!222 &1991061690
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -13699,7 +13781,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2076918338
 RectTransform:
   m_ObjectHideFlags: 0

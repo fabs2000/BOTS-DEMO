@@ -126,7 +126,8 @@ public class PlayerManager : MonoBehaviourPun
         ShipBehavior attackingShip = DetermineAction();
         
         //Depending on the derived class that the ship is, it will perform the specific action
-        attackingShip.ShipAction(tile);
+        if(attackingShip)
+            attackingShip.ShipAction(tile);
         
         //Resets action type so it can't be used on cooldown
         _actionType = ActionType.NO_ACTION;
