@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 
 public class ShipHealth : MonoBehaviour
@@ -14,7 +15,7 @@ public class ShipHealth : MonoBehaviour
 
     private void Start()
     {
-        _manager = FindObjectOfType<PlayerManager>();
+        _manager = PlayerManager.Instance;
         _shipMesh = transform.GetChild(0).gameObject;
         _shipBehavior = GetComponent<ShipBehavior>();
     }

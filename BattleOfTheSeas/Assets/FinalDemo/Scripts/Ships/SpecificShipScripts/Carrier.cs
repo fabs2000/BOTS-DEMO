@@ -5,23 +5,59 @@ using UnityEngine.Tilemaps;
 
 public class Carrier : ShipBehavior
 {
-   public override void ShipAction(TileBehaviour tile)
-   {
-      print("Air Attack");
+    private enum Coordiantes
+    {
+        TOP,
+        BOT,
+        LEFT,
+        RIGHT
+    }
 
-      TileBehaviour[] tiles = tile.ParentGrid.Tiles;
-      int tileId = tile.TileID;
-      
-      //Center of the attack
-      tile.BasicAttack();
 
-      //Top
-      tiles[tileId - 10].BasicAttack();
-      //Bottom
-      tiles[tileId + 10].BasicAttack();
-      //Left
-      tiles[tileId - 1].BasicAttack();
-      //Right
-      tiles[tileId + 1].BasicAttack();
-   }
+    public override void ShipAction(TileBehaviour tile)
+    {
+        print("Air Attack");
+
+        TileBehaviour[] tiles = tile.ParentGrid.Tiles;
+        Coordiantes coordiantes = Coordiantes.TOP;
+
+
+        int centerTileId = tile.TileID;
+        int fullOffset = 10, singleOffset = 1;
+        int tileId = 0;
+
+        //Center of the attack
+        tile.BasicAttack();
+
+        //Attacks surrounding tiles
+        for (int i = 0; i < 4; i++)
+        {
+            switch (coordiantes)
+            {
+                case Coordiantes.TOP:
+                    tileId = centerTileId - fullOffset;
+                    break;
+                case Coordiantes.BOT:
+                    tileId = centerTileId + fullOffset;
+                    break;
+                case Coordiantes.LEFT:
+                    tileId = centerTileId - singleOffset;
+                    break;
+                case Coordiantes.RIGHT:
+                    tileId = centerTileId + singleOffset;
+                    break;
+            }
+
+            if (tileId < 0)
+                tileId += tiles.Length;
+            else if (tileId > tiles.Length)
+                tileId -= tiles.Length;
+            
+            coordiantes++;
+            
+            print("Tile to fire on: " + tileId);
+            
+            tiles[tileId].BasicAttack();
+        }
+    }
 }

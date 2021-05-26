@@ -11,6 +11,7 @@ using Random = UnityEngine.Random;
 
 public class PlayerManager : MonoBehaviourPun
 {
+   
     public enum ActionType
     {
         AIR_ATTACKS = 0,
@@ -18,8 +19,23 @@ public class PlayerManager : MonoBehaviourPun
         PIERCE_MISSILE = 2,
         PROTECTIVE_DOME = 3,
         REPAIR = 4,
-        BASIC_FIRE = 5
+        BASIC_FIRE = 5,
+        NO_ACTION = 6
     }
+    
+    #region Public
+    
+    public static PlayerManager Instance;
+
+    public ActionType Action => _actionType;
+    public ShipBehavior SelectedShip
+    {
+        get => _selectedShip;
+        set => _selectedShip = value;
+    }
+    public GridBehaviour SelfGrid => _selfGrid;
+
+    #endregion
     
     #region HUDVariables
 
@@ -32,7 +48,7 @@ public class PlayerManager : MonoBehaviourPun
 
     #region Private
 
-    private ActionType _actionType = ActionType.BASIC_FIRE;
+    private ActionType _actionType = ActionType.NO_ACTION;
     private TurnBasedSystem _turnBasedSystem;
 
     private GameObject _playerBoard, _enemyBoard;
@@ -41,20 +57,19 @@ public class PlayerManager : MonoBehaviourPun
     private ShipBehavior _selectedShip;
 
     #endregion
-
-    #region Public
-
-    public ActionType Action => _actionType;
-    public ShipBehavior SelectedShip
-    {
-        get => _selectedShip;
-        set => _selectedShip = value;
-    }
-    public GridBehaviour SelfGrid => _selfGrid;
-
-    #endregion
-
+    
     #region MonoBehaviourCallbacks
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
     private void Start()
     {
         _turnBasedSystem = TurnBasedSystem.Instance;
@@ -95,7 +110,7 @@ public class PlayerManager : MonoBehaviourPun
 
     public void SetActionType(int newActionType)
     {
-        _actionType = (ActionType) newActionType;
+        photonView.RPC("UpdateActionSelection", RpcTarget.All, newActionType);
     }
 
     public void ManageTileActions(TileBehaviour tile)
@@ -103,14 +118,18 @@ public class PlayerManager : MonoBehaviourPun
         if (_actionType == ActionType.BASIC_FIRE)
         {
             //If the attack is the basic fire attack then the rest of the function can be skipped
+            print("BASIC");
             tile.BasicAttack();
             return;
         }
         
-        ShipBehavior attackingShip = DetermineAttack();
+        ShipBehavior attackingShip = DetermineAction();
         
         //Depending on the derived class that the ship is, it will perform the specific action
         attackingShip.ShipAction(tile);
+        
+        //Resets action type so it can't be used on cooldown
+        _actionType = ActionType.NO_ACTION;
     }
     
     #endregion
@@ -143,11 +162,11 @@ public class PlayerManager : MonoBehaviourPun
         }
     }
 
-    private ShipBehavior DetermineAttack()
+    private ShipBehavior DetermineAction()
     {
         foreach (var ship in _selfGrid.Ships)
         {
-            if ((int)_actionType == (int)ship.ShipClass)
+            if ((int) _actionType == (int) ship.ShipClass)
             {
                 return ship;
             }
@@ -184,4 +203,15 @@ public class PlayerManager : MonoBehaviourPun
     }
 
     #endregion
+
+    #region RPC
+
+    [PunRPC]
+    private void UpdateActionSelection(int newActionType)
+    {
+        _actionType = (ActionType) newActionType;
+    }
+
+    #endregion
+    
 }

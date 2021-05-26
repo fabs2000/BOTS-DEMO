@@ -12,6 +12,7 @@ public class GridBehaviour : MonoBehaviour
     #region PublicVariables
 
     public List<ShipBehavior> Ships => _shipBehaviors;
+    public TileBehaviour[] Tiles => _tiles;
     
     #endregion
     
@@ -22,10 +23,9 @@ public class GridBehaviour : MonoBehaviour
     
     #endregion
 
-    #region PrivatesVariables
+    #region PrivateVariables
 
     private TileBehaviour[] _tiles;
-    public TileBehaviour[] Tiles => _tiles;
 
     #endregion
 
@@ -92,9 +92,9 @@ public class GridBehaviour : MonoBehaviour
     public void ReplicateTileAction(int tileID)
     {
         TileBehaviour tileToFire = FindCloneTile(tileID);
-        
-        if(tileToFire)
-            tileToFire.TileAction();
+
+        if (tileToFire)
+            PlayerManager.Instance.ManageTileActions(tileToFire);
     }
 
     public void ReplicateShipTransforms()

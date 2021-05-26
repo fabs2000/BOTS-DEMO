@@ -19,7 +19,6 @@ public class ShipBehavior : MonoBehaviourPun
     #region Private Variables
     
     private TileBehaviour _tileShip;
-    
     private PlayerManager _playerManager;
     private Vector3 _startPos;
 
@@ -42,6 +41,7 @@ public class ShipBehavior : MonoBehaviourPun
     #region MonobehaviourCallbacks
     void Start()
     {
+        _playerManager = PlayerManager.Instance;
         _startPos = transform.position;
     }
     
@@ -66,12 +66,10 @@ public class ShipBehavior : MonoBehaviourPun
     
     private void OnMouseDown()
     {
-        if (!photonView.IsMine || !_playerManager)
+        if (!photonView.IsMine)
         {
             photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
             CloneShip.photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
-            
-            _playerManager = FindObjectOfType<PlayerManager>();
         }
 
         if (photonView.IsMine)

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
@@ -5,9 +6,15 @@ using UnityEngine;
 
 public class PositionPlayer : MonoBehaviourPun
 {
-    [Space(20)] [SerializeField] private Transform[] _spawns;
-    [SerializeField] private PlayerManager _player;
-    [SerializeField] private Camera _initialCamera;
+    [SerializeField] private Transform[] _spawns;
+    [Space(20)] [SerializeField] private Camera _initialCamera;
+    
+    private PlayerManager _player;
+
+    private void Start()
+    {
+        _player = PlayerManager.Instance;
+    }
 
     public void InitPlayer()
     {

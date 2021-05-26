@@ -161,6 +161,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CloneShip: {fileID: 0}
   ShipClass: 2
+  ActionCooldown: 2
 --- !u!114 &-1480845482379877330
 MonoBehaviour:
   m_ObjectHideFlags: 0

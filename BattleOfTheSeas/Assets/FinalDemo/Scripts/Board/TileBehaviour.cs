@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 
 public class TileBehaviour : MonoBehaviourPun
@@ -28,18 +29,18 @@ public class TileBehaviour : MonoBehaviourPun
         get => _parentGrid;
         set => _parentGrid = value;
     }
-    
     public int TileID
     {
         get => _tileID;
         set => _tileID = value;
     }
-
+    
     #endregion
     
     #region MonoBehaviourCallbacks
     void Start()
     {
+        _playerManager = PlayerManager.Instance;
         _turnBasedSystem = TurnBasedSystem.Instance;
 
         _renderer = GetComponent<MeshRenderer>();
@@ -61,19 +62,17 @@ public class TileBehaviour : MonoBehaviourPun
         if (_tileShot)
             return;
 
-        // This is messy but it is due to the "PlayerManager" object not being initialized for some reason.
-        if (!_playerManager)
-            _playerManager = FindObjectOfType<PlayerManager>();
-
         //<<MAIN GAMEPLAY LOOP>>//
-        if (_turnBasedSystem.State == TurnBasedSystem.GameState.IN_PROGRESS &&
-            !_turnBasedSystem.IsPLayerTurnOver)
+        if (_turnBasedSystem.State == TurnBasedSystem.GameState.IN_PROGRESS &&  !_turnBasedSystem.IsPLayerTurnOver)
         {
-            //Player Actions on Selected Tile
-            photonView.RPC("TileAction", RpcTarget.All);
+            if (_playerManager.Action != PlayerManager.ActionType.NO_ACTION)
+            {
+                //Player Actions on Selected Tile
+                photonView.RPC("TileAction", RpcTarget.All);
 
-            //Swap player turn
-            _turnBasedSystem.EndPlayerTurn();
+                //Swap player turn
+                _turnBasedSystem.EndPlayerTurn();
+            }
         }
         else if (_turnBasedSystem.State == TurnBasedSystem.GameState.PREPARATION)
         {
@@ -87,21 +86,20 @@ public class TileBehaviour : MonoBehaviourPun
     {
         if (!_tileShot && _turnBasedSystem.State != TurnBasedSystem.GameState.OTHER_WON)
         {
-            ChangeTileColor(ColorToVec3(Color.yellow));
+            ChangeTileColor(Color.yellow);
         }
     }
     private void OnMouseExit()
     {
         if (!_tileShot && _turnBasedSystem.State != TurnBasedSystem.GameState.OTHER_WON)
         {
-            ChangeTileColor(ColorToVec3(Color.blue));
+            ChangeTileColor(Color.blue);
         }
     }
     
     #endregion
 
     #region Public Functions
-    
     public void BasicAttack()
     {
         if(_tileShot)
@@ -112,12 +110,16 @@ public class TileBehaviour : MonoBehaviourPun
 
         if (_shipRef)
         {
+            // I don't like this but since _shipRef can change mid game it's necessary :<
+            // Other solution is getting HealthComp after ships are locked,
+            // however this would, *in theory* be more performance taxing
+            
             _shipRef.GetComponent<ShipHealth>().ShipHit();
-            ChangeTileColor(ColorToVec3(Color.red));
+            ChangeTileColor(Color.red);
         }
         else
         {
-            ChangeTileColor(ColorToVec3(Color.white));
+            ChangeTileColor(Color.white);
         }
         
         _tileShot = true;
@@ -141,22 +143,15 @@ public class TileBehaviour : MonoBehaviourPun
         ship.TileShip = this;
         ship.transform.position = tilePos;
     }
-
-    private void ChangeTileColor(Vector3 newColor)
+    private void ChangeTileColor(Color newColor)
     {
-        Vector4 colorChange = new Vector4(newColor.x, newColor.y, newColor.z, 1f);
-        _renderer.material.color = colorChange;
+        _renderer.material.color = newColor;
     }
     
-    private Vector3 ColorToVec3(Color color)
-    {
-        return new Vector3(color.r, color.g, color.b);
-    }
-
     #endregion
 
     #region RPC
-
+    
     [PunRPC]
     public void TileAction()
     {

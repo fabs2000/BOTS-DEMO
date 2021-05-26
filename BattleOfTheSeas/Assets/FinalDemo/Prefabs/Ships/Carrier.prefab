@@ -80,6 +80,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CloneShip: {fileID: 0}
   ShipClass: 0
+  ActionCooldown: 3
 --- !u!114 &-6567874233008992253
 MonoBehaviour:
   m_ObjectHideFlags: 0
