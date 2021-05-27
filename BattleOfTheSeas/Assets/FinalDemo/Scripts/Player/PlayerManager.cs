@@ -73,16 +73,19 @@ public class PlayerManager : MonoBehaviourPun
     private void Start()
     {
         _turnBasedSystem = TurnBasedSystem.Instance;
+
+        //At the end of each turn reset action type to none
+        _turnBasedSystem.OnEndTurnCallbacks.AddListener(()=> photonView.RPC(
+            "UpdateActionSelection", RpcTarget.All,6));
         
         if (_rotLeft && _rotRight)
         {
-            Menu endGame = MenuManager.Instance.GetMenu("EndGame");
-            
             _rotLeft.onClick.AddListener(() => RotateShip(-1));
             _rotRight.onClick.AddListener(() => RotateShip(1));
             
             _turnBasedSystem.OnPrepEndedCallbacks.AddListener(() => LockShips());
             
+            Menu endGame = MenuManager.Instance.GetMenu("EndGame");
             _endText = endGame.GetComponentInChildren<Text>();
         }
         else
@@ -119,7 +122,7 @@ public class PlayerManager : MonoBehaviourPun
         {
             //If the attack is the basic fire attack then the rest of the function can be skipped
             print("BASIC");
-            tile.BasicAttack();
+            tile.AttackTile();
             return;
         }
         
@@ -128,9 +131,6 @@ public class PlayerManager : MonoBehaviourPun
         //Depending on the derived class that the ship is, it will perform the specific action
         if(attackingShip)
             attackingShip.ShipAction(tile);
-        
-        //Resets action type so it can't be used on cooldown
-        _actionType = ActionType.NO_ACTION;
     }
     
     #endregion
@@ -167,12 +167,12 @@ public class PlayerManager : MonoBehaviourPun
     {
         foreach (var ship in _selfGrid.Ships)
         {
-            if ((int) _actionType == (int) ship.ShipClass)
+            if ((int)_actionType == (int)ship.ShipClass)
             {
                 return ship;
             }
         }
-
+        
         return null;
     }
 
@@ -214,5 +214,4 @@ public class PlayerManager : MonoBehaviourPun
     }
 
     #endregion
-    
 }

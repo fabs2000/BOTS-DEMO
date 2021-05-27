@@ -27,7 +27,7 @@ public class Carrier : ShipBehavior
         int tileId = 0;
 
         //Center of the attack
-        tile.BasicAttack();
+        tile.AttackTile();
 
         //Attacks surrounding tiles
         for (int i = 0; i < 4; i++)
@@ -55,9 +55,7 @@ public class Carrier : ShipBehavior
             
             coordiantes++;
             
-            print("Tile to fire on: " + tileId);
-            
-            tiles[tileId].BasicAttack();
+            tiles[tileId].AttackTile();
         }
     }
 }

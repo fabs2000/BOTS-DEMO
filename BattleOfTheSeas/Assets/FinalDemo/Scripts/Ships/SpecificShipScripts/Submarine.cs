@@ -19,7 +19,7 @@ public class Submarine : ShipBehavior
         foreach (var tileBehaviour in tileRow)
         {
             yield return new WaitForSeconds(0.1f);
-            tileBehaviour.BasicAttack();
+            tileBehaviour.AttackTile();
         }
     }
 }

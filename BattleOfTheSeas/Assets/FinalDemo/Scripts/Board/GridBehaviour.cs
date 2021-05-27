@@ -94,7 +94,10 @@ public class GridBehaviour : MonoBehaviour
         TileBehaviour tileToFire = FindCloneTile(tileID);
 
         if (tileToFire)
+        {
             PlayerManager.Instance.ManageTileActions(tileToFire);
+            print("Replicating?");
+        }
     }
 
     public void ReplicateShipTransforms()

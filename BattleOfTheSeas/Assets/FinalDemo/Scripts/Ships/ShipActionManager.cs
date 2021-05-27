@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,25 +16,35 @@ public class ShipActionManager : MonoBehaviour
     {
         _button = GetComponent<Button>();
         _text = GetComponentInChildren<Text>();
-        
-        currentCD = _parentShip.ActionCooldown;
 
-        TurnBasedSystem.Instance.OnEndTurnCallbacks.AddListener(() => CheckForCd());
+        PlayerManager player = PlayerManager.Instance;
+        
+        _button.onClick.AddListener(()=> 
+            player.SetActionType((int)_parentShip.ShipClass));
+        
+        TurnBasedSystem.Instance.OnEndTurnCallbacks.AddListener(() => CheckForCooldown());
     }
 
-    private void CheckForCd()
+    public void StartCooldown()
+    {
+        _button.enabled = false;
+        currentCD = _parentShip.ActionCooldown;
+    }
+ 
+    private void CheckForCooldown()
     {
         if (_button.enabled)
             return;
 
-        currentCD--;
-
+        _text.text = currentCD.ToString();
+        
         if (currentCD == 0)
         {
             _button.enabled = true;
             currentCD = _parentShip.ActionCooldown;
+            _text.text = "";
         }
         
-        _text.text = currentCD.ToString();
+        --currentCD;
     }
 }

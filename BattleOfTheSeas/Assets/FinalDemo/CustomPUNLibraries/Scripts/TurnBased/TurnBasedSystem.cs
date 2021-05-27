@@ -68,8 +68,7 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
     {
         print(PhotonNetwork.LocalPlayer.ActorNumber);
         _localPlayerID = PhotonNetwork.LocalPlayer.ActorNumber;
-
-        _remainingPrepDuration = _prepStateDuration;
+        
         _remainingTurnDuration = _turnDuration;
     }
     
@@ -170,6 +169,8 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
     {
         State = GameState.PREPARATION;
 
+        _remainingPrepDuration = _prepStateDuration;
+        
         print("Preparation has begun!");
 
         while (HasPreparationStage)

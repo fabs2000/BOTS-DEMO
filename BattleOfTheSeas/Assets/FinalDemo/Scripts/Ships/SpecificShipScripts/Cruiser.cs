@@ -7,5 +7,8 @@ public class Cruiser : ShipBehavior
     public override void ShipAction(TileBehaviour tile)
     {
         print("Cruiser");
+        
+        
+        
     }
 }

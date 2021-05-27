@@ -94,6 +94,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _shipHealth: 4
+  _armor: 2
 --- !u!114 &4000916752086903984
 MonoBehaviour:
   m_ObjectHideFlags: 0
