@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1381411536084203666}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: SlectedTileIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 5965956780495824015}
   - component: {fileID: 2592433036265969351}
   - component: {fileID: 5991009750456649865}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}

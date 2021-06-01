@@ -6,7 +6,7 @@ public class Submarine : ShipBehavior
 {
     public override void ShipAction(TileBehaviour tile)
     {
-        print("Submarine");
+        //print("Submarine");
 
         StartCoroutine(RowAttack(tile));
     }

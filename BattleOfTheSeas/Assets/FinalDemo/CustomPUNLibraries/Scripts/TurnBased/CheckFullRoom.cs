@@ -15,11 +15,16 @@ public class CheckFullRoom : MonoBehaviourPunCallbacks
     }
     private IEnumerator CheckPlayersEntered()
     {
+        TurnBasedSystem turnBasedSystem = TurnBasedSystem.Instance;
+        
         while (true)
         {
             if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
             {
-                TurnBasedSystem.Instance.BeginGame();
+                if(turnBasedSystem.HasPreparationStage)
+                    turnBasedSystem.BeginPreparationStage();
+                else
+                    turnBasedSystem.BeginGame();
 
                 // This calls whatever actions the game needs to go through at the beginning
                 BeginGameActions.Invoke();

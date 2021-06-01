@@ -18,13 +18,13 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
         LOCAL_WON,
         OTHER_WON
     }
-    
+
     #region Public Variables
-    
+
     static public TurnBasedSystem Instance;
-    
+
     public bool HasPreparationStage = true;
-    
+
     [NonSerialized] public bool IsPLayerTurnOver;
     [NonSerialized] public int PlayerTurnID;
     [NonSerialized] public GameState State = GameState.IN_PROGRESS;
@@ -35,21 +35,22 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
 
     #region Private Variables
 
-    [Space(20)]
-    [Tooltip("Duration Variables for Prep stage and turns measured in seconds")]
-    [SerializeField] private float _prepStateDuration = 80f;
+    [Space(20)] [Tooltip("Duration Variables for Prep stage and turns measured in seconds")] [SerializeField]
+    private float _prepStateDuration = 80f;
+
     [SerializeField] private float _turnDuration = 30f;
-    
+
     private float _remainingPrepDuration, _remainingTurnDuration;
     private int _localPlayerID;
 
     #endregion
 
     #region Custom Event Callbacks
-    
-    [NonSerialized] public UnityEvent OnPrepEndedCallbacks = new UnityEvent();
+
+    [NonSerialized] public UnityEvent OnBeginGameCallbacks = new UnityEvent();
+    [NonSerialized] public UnityEvent OnBeginTurnCallbacks = new UnityEvent();
     [NonSerialized] public UnityEvent OnEndTurnCallbacks = new UnityEvent();
-    
+
     #endregion
 
     #region MonoBehaviourCallbacks
@@ -68,41 +69,40 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
     {
         print(PhotonNetwork.LocalPlayer.ActorNumber);
         _localPlayerID = PhotonNetwork.LocalPlayer.ActorNumber;
-        
+
         _remainingTurnDuration = _turnDuration;
+        _remainingPrepDuration = _prepStateDuration;
     }
-    
+
     #endregion
-    
+
     #region PublicFunctions
     public void BeginGame()
     {
-        if (HasPreparationStage)
-        {
-            StartCoroutine(BeginPreparation());
-        }
-        else
-        {
-            //Game always starts with host player
-            PlayerTurnID = 1;
-            
-            Debug.Log("Player turn: " + PlayerTurnID + ", Local Id: " + _localPlayerID);
-            
-            //Function begins game
-            if (PlayerTurnID == _localPlayerID)
-                StartCoroutine(BeginTurn());
-        }
+        //Begin game Callbacks
+        OnBeginGameCallbacks.Invoke();
+        
+        //Game always starts with host player
+        PlayerTurnID = 1;
+
+        //Function begins game
+        if (PlayerTurnID == _localPlayerID)
+            StartCoroutine(BeginTurn());
+    }
+    public void BeginPreparationStage()
+    {
+        StartCoroutine(BeginPreparation());
     }
     public void EndPlayerTurn()
     {
         StopAllCoroutines();
-        
+
         _remainingTurnDuration = _turnDuration;
         IsPLayerTurnOver = true;
-        
+
         //Turn End Callbacks
         OnEndTurnCallbacks.Invoke();
-        
+
         //Relays to all clients that it is now the next player's turn
         photonView.RPC("NextPlayerTurn", RpcTarget.All);
     }
@@ -112,7 +112,7 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
         {
             return _remainingTurnDuration;
         }
-        else if(State == GameState.PREPARATION)
+        else if (State == GameState.PREPARATION)
         {
             return _remainingPrepDuration;
         }
@@ -123,7 +123,7 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
     #endregion
 
     #region PrivateFunctions
-    
+
     [PunRPC]
     private void NextPlayerTurn()
     {
@@ -147,70 +147,68 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
     #endregion
 
     #region Coroutines
+
     private IEnumerator BeginTurn()
     {
-        State = GameState.IN_PROGRESS;
+        OnBeginTurnCallbacks.Invoke();
 
-        print("Player's " + _localPlayerID + " turn is starting");
+        State = GameState.IN_PROGRESS;
 
         IsPLayerTurnOver = false;
         while (!IsPLayerTurnOver)
         {
             _remainingTurnDuration -= Time.deltaTime;
-            
+
             if (_remainingTurnDuration <= 0)
                 EndPlayerTurn();
-            
+
             yield return new WaitForSeconds(Time.deltaTime);
         }
+
         yield return null;
     }
+
     private IEnumerator BeginPreparation()
     {
         State = GameState.PREPARATION;
 
         _remainingPrepDuration = _prepStateDuration;
-        
-        print("Preparation has begun!");
 
         while (HasPreparationStage)
         {
             _remainingPrepDuration -= Time.deltaTime;
-            
+
             if (_remainingPrepDuration <= 0)
             {
                 HasPreparationStage = false;
                 _remainingPrepDuration = 0f;
-                
-                //Preparation end Callbacks
-                OnPrepEndedCallbacks.Invoke();
-                
+
                 BeginGame();
             }
+
             yield return new WaitForSeconds(Time.deltaTime);
         }
+
         yield return null;
     }
-    
+
     #endregion
 
     #region ValueSync
+
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.IsWriting)
         {
             stream.SendNext(_remainingPrepDuration);
             stream.SendNext(HasPreparationStage);
-            //stream.SendNext(_remainingTurnDuration);
         }
         else
         {
-            _remainingPrepDuration = (float)stream.ReceiveNext();
+            _remainingPrepDuration = (float) stream.ReceiveNext();
             HasPreparationStage = (bool) stream.ReceiveNext();
-            //_remainingTurnDuration = (float)stream.ReceiveNext();
         }
     }
 
     #endregion
 }
-

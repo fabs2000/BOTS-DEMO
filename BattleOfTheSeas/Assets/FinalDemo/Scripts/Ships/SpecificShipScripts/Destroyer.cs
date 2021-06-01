@@ -6,6 +6,8 @@ public class Destroyer : ShipBehavior
 {
     public override void ShipAction(TileBehaviour tile)
     {
-        print("Destroyer");
+        //print("Destroyer");
+        
+        tile.AttackTile();
     }
 }

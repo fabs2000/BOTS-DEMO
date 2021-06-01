@@ -8,21 +8,25 @@ public class ShipActionManager : MonoBehaviour
 {
     [SerializeField] private ShipBehavior _parentShip;
 
+    private PlayerManager _player;
+    
     private Button _button;
     private Text _text;
     private int currentCD;
     
     void Start()
     {
+        currentCD = _parentShip.ActionCooldown;
+
         _button = GetComponent<Button>();
         _text = GetComponentInChildren<Text>();
 
-        PlayerManager player = PlayerManager.Instance;
+        _player = PlayerManager.Instance;
         
         _button.onClick.AddListener(()=> 
-            player.SetActionType((int)_parentShip.ShipClass));
+            _player.SetActionType((int)_parentShip.ShipClass));
         
-        TurnBasedSystem.Instance.OnEndTurnCallbacks.AddListener(() => CheckForCooldown());
+        TurnBasedSystem.Instance.OnEndTurnCallbacks.AddListener(CheckForCooldown);
     }
 
     public void StartCooldown()
@@ -33,6 +37,9 @@ public class ShipActionManager : MonoBehaviour
  
     private void CheckForCooldown()
     {
+        if ((int) _player.Action == (int) _parentShip.ShipClass)
+            _button.enabled = false;
+        
         if (_button.enabled)
             return;
 

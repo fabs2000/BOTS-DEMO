@@ -13,10 +13,12 @@ public class Carrier : ShipBehavior
         RIGHT
     }
 
-
     public override void ShipAction(TileBehaviour tile)
     {
-        print("Air Attack");
+        if (tile.State == TileBehaviour.TileState.TILE_DESTROYED)
+            return;
+        
+        //print("Air Attack");
 
         TileBehaviour[] tiles = tile.ParentGrid.Tiles;
         Coordiantes coordiantes = Coordiantes.TOP;
@@ -48,14 +50,15 @@ public class Carrier : ShipBehavior
                     break;
             }
 
-            if (tileId < 0)
-                tileId += tiles.Length;
-            else if (tileId > tiles.Length)
-                tileId -= tiles.Length;
+            // if (tileId < 0)
+            //     tileId += tiles.Length;
+            // else if (tileId > tiles.Length)
+            //     tileId -= tiles.Length;
+            
+            if(tileId > 0 && tileId < tiles.Length)
+                tiles[tileId].AttackTile();
             
             coordiantes++;
-            
-            tiles[tileId].AttackTile();
         }
     }
 }

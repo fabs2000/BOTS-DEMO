@@ -61,11 +61,6 @@ public class GridBehaviour : MonoBehaviour
             ship.gameObject.layer = layer;
         }
     }
-    
-    private TileBehaviour FindCloneTile(int tileID)
-    {
-        return Array.Find(_otherBoard.Tiles,tile => tile.TileID == tileID);
-    }
 
     //Mid Game Functions
     public void RemoveShipFromGrid(ShipBehavior ship)
@@ -94,28 +89,29 @@ public class GridBehaviour : MonoBehaviour
         TileBehaviour tileToFire = FindCloneTile(tileID);
 
         if (tileToFire)
-        {
             PlayerManager.Instance.ManageTileActions(tileToFire);
-            print("Replicating?");
-        }
     }
 
     public void ReplicateShipTransforms()
     {
-        foreach (var ship in _shipBehaviors)
+        //Jankiest solution in the world but can give results I want
+        for (int i = 0; i < 2; i++)
         {
-            //Find tile which ship should be placed on
-            TileBehaviour otherTile = FindCloneTile(ship.TileShip.TileID);
-
-            //Get the transform of the ship's clone
-            Transform otherShipTransf = ship.CloneShip.transform;
-            
-            if (otherTile)
+            foreach (var ship in _shipBehaviors)
             {
-                Vector3 shipRotation = ship.transform.localRotation.eulerAngles;
-                
-                otherShipTransf.position = otherTile.transform.position;
-                otherShipTransf.localRotation = Quaternion.Euler(shipRotation);
+                //Find tile which ship should be placed on
+                TileBehaviour otherTile = FindCloneTile(ship.TileShip.TileID);
+
+                //Get the transform of the ship's clone
+                Transform otherShipTransf = ship.CloneShip.transform;
+
+                if (otherTile)
+                {
+                    Vector3 shipRotation = ship.transform.localRotation.eulerAngles;
+
+                    otherShipTransf.position = otherTile.transform.position;
+                    otherShipTransf.localRotation = Quaternion.Euler(shipRotation);
+                }
             }
         }
     }
@@ -123,7 +119,14 @@ public class GridBehaviour : MonoBehaviour
     #endregion
 
     #region Private Functions
+    
+    private TileBehaviour FindCloneTile(int tileID)
+    {
+        if (!_otherBoard)
+            return null;
 
+        return Array.Find(_otherBoard.Tiles,tile => tile.TileID == tileID);
+    }
     private bool FindShipToRemove(ShipBehavior otherShip)
     {
         ShipBehavior shipToRemove = _shipBehaviors.Find(ship => ship == otherShip); 

@@ -4,10 +4,9 @@ using System.Collections.Generic;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
-
 public class TileBehaviour : MonoBehaviourPun
 {
-    private enum TileState
+    public enum TileState
     {
         UNTARGETABLE,
         TILE_DESTROYED,
@@ -27,21 +26,25 @@ public class TileBehaviour : MonoBehaviourPun
     private TileState _tileState = TileState.CLEAR;
     private int _tileID;
 
+    private int _maxUntargetableRounds = 2;
+
     #endregion
 
     #region Public Variables
 
+    public bool HasShip = false;
+    
     public GridBehaviour ParentGrid
     {
         get => _parentGrid;
         set => _parentGrid = value;
     }
-
     public int TileID
     {
         get => _tileID;
         set => _tileID = value;
     }
+    public TileState State => _tileState;
 
     #endregion
 
@@ -51,6 +54,8 @@ public class TileBehaviour : MonoBehaviourPun
         _playerManager = PlayerManager.Instance;
         _turnBasedSystem = TurnBasedSystem.Instance;
 
+        _turnBasedSystem.OnEndTurnCallbacks.AddListener(ResetState);
+        
         _renderer = GetComponent<MeshRenderer>();
 
         _missile = transform.GetChild(0).gameObject;
@@ -58,25 +63,30 @@ public class TileBehaviour : MonoBehaviourPun
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Ship"))
+        {
             _shipRef = other.gameObject;
+            HasShip = true;
+        }
     }
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Ship"))
+        {
             _shipRef = null;
+            HasShip = false;
+        }
     }
     private void OnMouseDown()
     {
-        if (_tileState == TileState.TILE_DESTROYED)
-            return;
-
         //<<MAIN GAMEPLAY LOOP>>//
         if (_turnBasedSystem.State == TurnBasedSystem.GameState.IN_PROGRESS && !_turnBasedSystem.IsPLayerTurnOver)
         {
             if (_playerManager.Action != PlayerManager.ActionType.NO_ACTION)
             {
-                //Player Actions on Selected Tile
-                photonView.RPC("TileAction", RpcTarget.All);
+                //_playerManager.ManageTileActions(this);
+                
+                //Replicate Actions on Selected Tile
+                photonView.RPC("TileAction", RpcTarget.AllBuffered);
 
                 //Swap player turn
                 _turnBasedSystem.EndPlayerTurn();
@@ -92,49 +102,39 @@ public class TileBehaviour : MonoBehaviourPun
     }
     private void OnMouseEnter()
     {
-        // if ((_tileState != TileState.TILE_DESTROYED || _tileState != TileState.UNTARGETABLE)
-        //     
-        //     && _turnBasedSystem.State != TurnBasedSystem.GameState.OTHER_WON)
-        // {
-        //     ChangeTileColor(Color.yellow);
-        // }
-        
-        //TODO: Spawn icon on tile being hovered
-        
-
+        Transform iconTransform = _playerManager.TileSelector.transform;
+        iconTransform.SetPositionAndRotation(transform.position, transform.rotation);
     }
     private void OnMouseExit()
     {
-        // if ((_tileState != TileState.TILE_DESTROYED || _tileState != TileState.UNTARGETABLE)
-        //     && _turnBasedSystem.State != TurnBasedSystem.GameState.OTHER_WON)
-        // {
-        //     ChangeTileColor(Color.blue);
-        // }
+        Transform iconTransform = _playerManager.TileSelector.transform;
+        iconTransform.SetPositionAndRotation(new Vector3(0, -100, 0), Quaternion.identity);
     }
 
     #endregion
 
     #region Public Functions
-
     public void AttackTile()
     {
-        if (_tileState == TileState.TILE_DESTROYED )
+        if (_tileState == TileState.TILE_DESTROYED || _tileState == TileState.UNTARGETABLE)
             return;
 
         if (_missile)
             _missile.SetActive(true);
 
-        if (_shipRef)
+        if (HasShip)
         {
             // I don't like this but since _shipRef can change mid game it's necessary
             // Other solution is getting HealthComp after ships are locked,
             // however this would, *in theory* be more performance taxing
-            ShipHealth health = _shipRef.GetComponent<ShipHealth>();
+            if (_shipRef)
+            {
+                ShipHealth health = _shipRef.GetComponent<ShipHealth>();
+                health.ShipHit();
 
-
-            health.ShipHit();
-            _tileState = TileState.TILE_DESTROYED;
-            ChangeTileColor(Color.red);
+                _tileState = TileState.TILE_DESTROYED;
+                ChangeTileColor(Color.red);
+            }
         }
         else
         {
@@ -146,32 +146,37 @@ public class TileBehaviour : MonoBehaviourPun
 
     public void DefendTile()
     {
-        switch (_tileState)
-        {
-            case TileState.CLEAR:
-                return;
-            
-            case TileState.UNTARGETABLE:
-                
-                
-                
-                break;
-            
-            case TileState.TILE_DESTROYED:
-                ShipHealth health = _shipRef.GetComponent<ShipHealth>();
-                health.RestoreHealth();
-                
-                ChangeTileColor(Color.blue);
+        if (_tileState == TileState.TILE_DESTROYED || _tileState == TileState.UNTARGETABLE)
+            return;
 
-                _tileState = TileState.CLEAR;
-                break;
-        }
+        ChangeTileColor(Color.green);
+        
+        _tileState = TileState.UNTARGETABLE;
     }
 
+    public void RestoreTile()
+    {
+        if (!HasShip || _tileState == TileState.CLEAR || _tileState == TileState.UNTARGETABLE)
+            return;
+
+        if (_shipRef)
+        {
+            ShipHealth health = _shipRef.GetComponent<ShipHealth>();
+
+            if (health._shipHealth != 0)
+            {
+                health.RestoreHealth();
+
+                ChangeTileColor(Color.blue);
+                _tileState = TileState.CLEAR;
+            }
+        }
+    }
+    
     #endregion
 
     #region Private Functions
-
+    
     private void PlaceShip()
     {
         Vector3 tilePos = transform.position;
@@ -181,12 +186,25 @@ public class TileBehaviour : MonoBehaviourPun
         ship.TileShip = this;
         ship.transform.position = tilePos;
     }
-
     private void ChangeTileColor(Color newColor)
     {
         _renderer.material.color = newColor;
     }
 
+    private void ResetState()
+    {
+        if (_tileState == TileState.UNTARGETABLE)
+        {
+            _maxUntargetableRounds--;
+
+            if (_maxUntargetableRounds == 0)
+            {
+                ChangeTileColor(Color.blue);
+                _tileState = TileState.CLEAR;
+            }
+        }
+    }
+    
     #endregion
 
     #region RPC

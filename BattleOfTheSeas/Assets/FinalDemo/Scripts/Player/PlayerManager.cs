@@ -1,13 +1,8 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Timers;
 using Photon.Pun;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
-using Random = UnityEngine.Random;
 
 public class PlayerManager : MonoBehaviourPun
 {
@@ -27,6 +22,8 @@ public class PlayerManager : MonoBehaviourPun
     
     public static PlayerManager Instance;
 
+    public GameObject TileSelector;
+    
     public ActionType Action => _actionType;
     public ShipBehavior SelectedShip
     {
@@ -39,6 +36,7 @@ public class PlayerManager : MonoBehaviourPun
     
     #region HUDVariables
 
+    [Space(20)][Header("HUD Variables")]
     [SerializeField] private Button _rotLeft;
     [SerializeField] private Button _rotRight;
 
@@ -74,16 +72,18 @@ public class PlayerManager : MonoBehaviourPun
     {
         _turnBasedSystem = TurnBasedSystem.Instance;
 
-        //At the end of each turn reset action type to none
-        _turnBasedSystem.OnEndTurnCallbacks.AddListener(()=> photonView.RPC(
-            "UpdateActionSelection", RpcTarget.All,6));
+        //At the beginning of each turn reset action type to none
+        _turnBasedSystem.OnBeginTurnCallbacks.AddListener(()=> UpdateActionSelection(6));
+
+        // _turnBasedSystem.OnBeginTurnCallbacks.AddListener(()=> photonView.RPC(
+        //     "UpdateActionSelection", RpcTarget.All,6));
         
         if (_rotLeft && _rotRight)
         {
             _rotLeft.onClick.AddListener(() => RotateShip(-1));
             _rotRight.onClick.AddListener(() => RotateShip(1));
             
-            _turnBasedSystem.OnPrepEndedCallbacks.AddListener(() => LockShips());
+            _turnBasedSystem.OnBeginGameCallbacks.AddListener(LockShips);
             
             Menu endGame = MenuManager.Instance.GetMenu("EndGame");
             _endText = endGame.GetComponentInChildren<Text>();
@@ -113,6 +113,19 @@ public class PlayerManager : MonoBehaviourPun
 
     public void SetActionType(int newActionType)
     {
+        if (newActionType == (int) ActionType.REPAIR || newActionType == (int) ActionType.PROTECTIVE_DOME)
+        {
+            //If it's a defensive action, these actions can only be done on the player's grid
+            _enemyGrid.SetTilesLayer(2);
+            _selfGrid.SetTilesLayer(0);
+        }
+        else
+        {
+            //If it's an attacking action, they can only be done on the enemy's grid.
+            _enemyGrid.SetTilesLayer(0);
+            _selfGrid.SetTilesLayer(2);
+        }
+
         photonView.RPC("UpdateActionSelection", RpcTarget.All, newActionType);
     }
 
@@ -121,16 +134,16 @@ public class PlayerManager : MonoBehaviourPun
         if (_actionType == ActionType.BASIC_FIRE)
         {
             //If the attack is the basic fire attack then the rest of the function can be skipped
-            print("BASIC");
+            //print("BASIC");
             tile.AttackTile();
             return;
         }
         
-        ShipBehavior attackingShip = DetermineAction();
+        ShipBehavior shipAction = DetermineAction();
         
         //Depending on the derived class that the ship is, it will perform the specific action
-        if(attackingShip)
-            attackingShip.ShipAction(tile);
+        if(shipAction)
+            shipAction.ShipAction(tile);
     }
     
     #endregion
@@ -212,6 +225,7 @@ public class PlayerManager : MonoBehaviourPun
     {
         _actionType = (ActionType) newActionType;
     }
+    
 
     #endregion
 }
