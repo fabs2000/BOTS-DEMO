@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: -3951515965655183760}
   - component: {fileID: 2650844609954631880}
   - component: {fileID: -7503413731469129776}
-  - component: {fileID: 6022999224335046790}
+  - component: {fileID: 3303568038744169905}
   m_Layer: 0
   m_Name: Submarine
   m_TagString: Ship
@@ -129,8 +129,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.69086486, y: 0.9864079, z: 2.9539516}
-  m_Center: {x: -0.011860728, y: 0.09543456, z: 1}
+  m_Size: {x: 0.69086486, y: 0.5, z: 2.9539516}
+  m_Center: {x: -0.011860728, y: 0.4, z: 1}
 --- !u!54 &-8275999470478357343
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -195,11 +195,11 @@ MonoBehaviour:
   OwnershipTransfer: 1
   observableSearch: 2
   ObservedComponents:
-  - {fileID: 6022999224335046790}
+  - {fileID: 3303568038744169905}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &6022999224335046790
+--- !u!114 &3303568038744169905
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -208,10 +208,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 8494328676813089510}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Script: {fileID: 11500000, guid: 8efc6b1d64977384eb3405357896c656, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
+  m_PositionModel:
+    SynchronizeEnabled: 1
+    TeleportEnabled: 1
+    TeleportIfDistanceGreaterThan: 100
+    InterpolateOption: 0
+    InterpolateMoveTowardsSpeed: 1
+    InterpolateLerpSpeed: 1
+    ExtrapolateOption: 0
+    ExtrapolateSpeed: 1
+    ExtrapolateIncludingRoundTripTime: 1
+    ExtrapolateNumberOfStoredPositions: 1
+  m_RotationModel:
+    SynchronizeEnabled: 1
+    InterpolateOption: 0
+    InterpolateRotateTowardsSpeed: 180
+    InterpolateLerpSpeed: 5
+  m_ScaleModel:
+    SynchronizeEnabled: 0
+    InterpolateOption: 0
+    InterpolateMoveTowardsSpeed: 1
+    InterpolateLerpSpeed: 0

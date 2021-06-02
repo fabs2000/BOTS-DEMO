@@ -26,7 +26,7 @@ public class ShipActionManager : MonoBehaviour
         _button.onClick.AddListener(()=> 
             _player.SetActionType((int)_parentShip.ShipClass));
         
-        TurnBasedSystem.Instance.OnEndTurnCallbacks.AddListener(CheckForCooldown);
+        TurnBasedSystem.Instance.OnEndTurnCallbacks += CheckForCooldown;
     }
 
     public void StartCooldown()

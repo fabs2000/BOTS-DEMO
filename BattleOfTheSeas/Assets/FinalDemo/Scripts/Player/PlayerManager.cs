@@ -73,17 +73,15 @@ public class PlayerManager : MonoBehaviourPun
         _turnBasedSystem = TurnBasedSystem.Instance;
 
         //At the beginning of each turn reset action type to none
-        _turnBasedSystem.OnBeginTurnCallbacks.AddListener(()=> UpdateActionSelection(6));
+        _turnBasedSystem.OnBeginTurnCallbacks += ()=> UpdateActionSelection();
 
-        // _turnBasedSystem.OnBeginTurnCallbacks.AddListener(()=> photonView.RPC(
-        //     "UpdateActionSelection", RpcTarget.All,6));
-        
         if (_rotLeft && _rotRight)
         {
             _rotLeft.onClick.AddListener(() => RotateShip(-1));
             _rotRight.onClick.AddListener(() => RotateShip(1));
             
-            _turnBasedSystem.OnBeginGameCallbacks.AddListener(LockShips);
+            _turnBasedSystem.OnBeginGameCallbacks += ReplicateShips;
+            _turnBasedSystem.OnBeginGameCallbacks += LockShips;
             
             Menu endGame = MenuManager.Instance.GetMenu("EndGame");
             _endText = endGame.GetComponentInChildren<Text>();
@@ -134,7 +132,6 @@ public class PlayerManager : MonoBehaviourPun
         if (_actionType == ActionType.BASIC_FIRE)
         {
             //If the attack is the basic fire attack then the rest of the function can be skipped
-            //print("BASIC");
             tile.AttackTile();
             return;
         }
@@ -198,34 +195,40 @@ public class PlayerManager : MonoBehaviourPun
         _selectedShip.transform.Rotate(Vector3.up, direction * 90);
     }
 
+    private void ReplicateShips()
+    {        
+        //Set clone ship transforms
+        _selfGrid.ReplicateShipTransforms();
+    }
+
     private void LockShips()
     {
         MenuManager.Instance.OpenMenu("InGameHUD");
+        
+        //Checks for ships on each grid
+        _selfGrid.CheckForShips();
+        _enemyGrid.CheckForShips();
 
-        //Enables raycast for tiles
+        //Enables raycast for tiles and disables for ships
         _enemyGrid.SetTilesLayer(0);
+        _enemyGrid.SetShipLayer(2);
 
         //Disables raycast for player ships and tiles
         _selfGrid.SetTilesLayer(2);
         _selfGrid.SetShipLayer(2);
 
-        //Set clone ship transforms
-        _selfGrid.ReplicateShipTransforms();
-
         //Disables ship
-        _selectedShip = null;
+        _selectedShip = null; 
     }
-
     #endregion
 
     #region RPC
 
     [PunRPC]
-    private void UpdateActionSelection(int newActionType)
+    private void UpdateActionSelection(int newActionType = 6)
     {
         _actionType = (ActionType) newActionType;
     }
-    
 
     #endregion
 }

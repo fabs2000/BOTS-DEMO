@@ -6,8 +6,6 @@ public class Battleship : ShipBehavior
 {
     public override void ShipAction(TileBehaviour tile)
     {
-        //print("Battleship");
-
         TileBehaviour[] tiles = tile.ParentGrid.Tiles;
         Vector2Int protectiveAreaDimensions = new Vector2Int(3,5);
 

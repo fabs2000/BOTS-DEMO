@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
+using UnityEngine.UIElements;
 
 public class ShipBehavior : MonoBehaviourPun
 {
@@ -22,6 +24,10 @@ public class ShipBehavior : MonoBehaviourPun
     private PlayerManager _playerManager;
     private Vector3 _startPos;
 
+    //New 
+    private TileBehaviour[] _tiles;
+    private int _boatLength;
+
     #endregion
 
     #region Public Variables
@@ -36,6 +42,8 @@ public class ShipBehavior : MonoBehaviourPun
         set => _tileShip = value;
     }
 
+    public int BoatLength => _boatLength;
+
     #endregion
 
     #region MonobehaviourCallbacks
@@ -43,6 +51,30 @@ public class ShipBehavior : MonoBehaviourPun
     {
         _playerManager = PlayerManager.Instance;
         _startPos = transform.position;
+
+        //New
+        switch (ShipClass)
+        {
+            case ShipType.CARRIER:
+                _boatLength = 5;
+                break;
+            
+            case ShipType.BATTLESHIP:
+                _boatLength = 4;
+                break;
+            
+            case ShipType.SUBMARINE:
+                _boatLength = 3;
+                break;
+            
+            case ShipType.CRUISER:
+                _boatLength = 3;
+                break;
+            
+            case ShipType.DESTROYER:
+                _boatLength = 2;
+                break;
+        }
     }
     
     // private void Update()

@@ -54,28 +54,30 @@ public class TileBehaviour : MonoBehaviourPun
         _playerManager = PlayerManager.Instance;
         _turnBasedSystem = TurnBasedSystem.Instance;
 
-        _turnBasedSystem.OnEndTurnCallbacks.AddListener(ResetState);
+        _turnBasedSystem.OnEndTurnCallbacks += ResetState;
         
         _renderer = GetComponent<MeshRenderer>();
 
         _missile = transform.GetChild(0).gameObject;
     }
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Ship"))
-        {
-            _shipRef = other.gameObject;
-            HasShip = true;
-        }
-    }
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Ship"))
-        {
-            _shipRef = null;
-            HasShip = false;
-        }
-    }
+    
+    // private void OnTriggerEnter(Collider other)
+    // {
+    //     if (other.CompareTag("Ship"))
+    //     {
+    //         _shipRef = other.gameObject;
+    //         HasShip = true;
+    //     }
+    // }
+    // private void OnTriggerExit(Collider other)
+    // {
+    //     if (other.CompareTag("Ship"))
+    //     {
+    //         _shipRef = null;
+    //         HasShip = false;
+    //     }
+    // }
+    
     private void OnMouseDown()
     {
         //<<MAIN GAMEPLAY LOOP>>//
@@ -83,7 +85,7 @@ public class TileBehaviour : MonoBehaviourPun
         {
             if (_playerManager.Action != PlayerManager.ActionType.NO_ACTION)
             {
-                //_playerManager.ManageTileActions(this);
+                print("Tile ID: " + _tileID);
                 
                 //Replicate Actions on Selected Tile
                 photonView.RPC("TileAction", RpcTarget.AllBuffered);
@@ -114,6 +116,39 @@ public class TileBehaviour : MonoBehaviourPun
     #endregion
 
     #region Public Functions
+    
+    // public void CheckForShip()
+    // {
+    //     RaycastHit hit;
+    //     
+    //     if (Physics.Raycast(transform.position, 
+    //         transform.TransformDirection(Vector3.up), out hit,1f))
+    //     {
+    //         Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.up) * hit.distance, Color.red, 10f , false);
+    //         
+    //         GameObject objectHit = hit.collider.gameObject;
+    //     
+    //         if (objectHit == this.gameObject)
+    //             return;
+    //         
+    //         if (objectHit.CompareTag("Ship"))
+    //         {
+    //             print(objectHit.name + " Ship Hit");
+    //             _shipRef = gameObject;
+    //             HasShip = true;
+    //             
+    //             ChangeTileColor(Color.magenta);
+    //         }
+    //     }
+    //     else
+    //     {
+    //         _shipRef = null;
+    //         HasShip = false;
+    //             
+    //         ChangeTileColor(Color.blue);
+    //     }
+    // }
+    
     public void AttackTile()
     {
         if (_tileState == TileState.TILE_DESTROYED || _tileState == TileState.UNTARGETABLE)
@@ -185,6 +220,8 @@ public class TileBehaviour : MonoBehaviourPun
         //Set ship position
         ship.TileShip = this;
         ship.transform.position = tilePos;
+        
+        HasShip = true;
     }
     private void ChangeTileColor(Color newColor)
     {

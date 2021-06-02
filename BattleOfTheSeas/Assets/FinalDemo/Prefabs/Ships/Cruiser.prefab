@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: -7667248086610844366}
   - component: {fileID: -6797897136085737853}
   - component: {fileID: -8831222217231911179}
-  - component: {fileID: -5869684021786869489}
+  - component: {fileID: 3993014351962285454}
   m_Layer: 0
   m_Name: Cruiser
   m_TagString: Ship
@@ -129,7 +129,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 0.78, z: 2.7}
+  m_Size: {x: 1, y: 0.5, z: 2.7}
   m_Center: {x: 0, y: 0.4, z: 0.89}
 --- !u!54 &-7289523207635168203
 Rigidbody:
@@ -175,6 +175,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _shipHealth: 3
+  _armor: 0
 --- !u!114 &-8831222217231911179
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -194,11 +195,11 @@ MonoBehaviour:
   OwnershipTransfer: 1
   observableSearch: 2
   ObservedComponents:
-  - {fileID: -5869684021786869489}
+  - {fileID: 3993014351962285454}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &-5869684021786869489
+--- !u!114 &3993014351962285454
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -207,10 +208,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 8874368982167263689}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Script: {fileID: 11500000, guid: 8efc6b1d64977384eb3405357896c656, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
+  m_PositionModel:
+    SynchronizeEnabled: 1
+    TeleportEnabled: 1
+    TeleportIfDistanceGreaterThan: 100
+    InterpolateOption: 0
+    InterpolateMoveTowardsSpeed: 1
+    InterpolateLerpSpeed: 1
+    ExtrapolateOption: 0
+    ExtrapolateSpeed: 1
+    ExtrapolateIncludingRoundTripTime: 1
+    ExtrapolateNumberOfStoredPositions: 1
+  m_RotationModel:
+    SynchronizeEnabled: 1
+    InterpolateOption: 0
+    InterpolateRotateTowardsSpeed: 180
+    InterpolateLerpSpeed: 5
+  m_ScaleModel:
+    SynchronizeEnabled: 0
+    InterpolateOption: 0
+    InterpolateMoveTowardsSpeed: 1
+    InterpolateLerpSpeed: 0
