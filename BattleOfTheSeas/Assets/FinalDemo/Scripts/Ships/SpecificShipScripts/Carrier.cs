@@ -13,41 +13,50 @@ public class Carrier : ShipBehavior
         RIGHT
     }
 
-    public override void ShipAction(TileBehaviour tile)
+    public override void ShipAction(TileBehavior tile)
     {
-        TileBehaviour[] tiles = tile.ParentGrid.Tiles;
+        TileBehavior[,] tiles = tile.ParentGrid.Tiles2D;
         Coordiantes coordiantes = Coordiantes.TOP;
-
-
-        int centerTileId = tile.TileID;
-        int fullOffset = 10, singleOffset = 1;
-        int tileId = 0;
-
+        
+        Vector2Int centerTileId = tile.TileID;
+        int singleOffset = 1;
+        Vector2Int tileId = new Vector2Int();
+        
         //Center of the attack
         tile.AttackTile();
-
+        
+        //Backup
+        // tiles[centerTileId.x, centerTileId.y + 1].AttackTile();
+        // tiles[centerTileId.x, centerTileId.y - 1].AttackTile();
+        // tiles[centerTileId.x + 1, centerTileId.y].AttackTile();
+        // tiles[centerTileId.x - 1, centerTileId.y].AttackTile();
+        //
+        
         //Attacks surrounding tiles
         for (int i = 0; i < 4; i++)
         {
             switch (coordiantes)
             {
                 case Coordiantes.TOP:
-                    tileId = centerTileId - fullOffset;
+                    tileId = new Vector2Int(centerTileId.x, centerTileId.y + singleOffset);
                     break;
                 case Coordiantes.BOT:
-                    tileId = centerTileId + fullOffset;
+                    tileId = new Vector2Int(centerTileId.x, centerTileId.y - singleOffset);
                     break;
                 case Coordiantes.LEFT:
-                    tileId = centerTileId - singleOffset;
+                    tileId = new Vector2Int(centerTileId.x + singleOffset, centerTileId.y);
                     break;
                 case Coordiantes.RIGHT:
-                    tileId = centerTileId + singleOffset;
+                    tileId = new Vector2Int(centerTileId.x - singleOffset, centerTileId.y);
                     break;
             }
 
-            if(tileId > 0 && tileId < tiles.Length)
-                tiles[tileId].AttackTile();
-            
+            if (tileId.x >= 0 && tileId.x <= tiles.GetLength(0) &&
+                tileId.y >= 0 && tileId.y <= tiles.GetLength(1))
+            {
+                tiles[tileId.x, tileId.y].AttackTile();
+            }
+
             coordiantes++;
         }
     }

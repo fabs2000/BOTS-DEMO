@@ -8,7 +8,7 @@ using UnityEngine.SocialPlatforms;
 public class GridMaker : MonoBehaviour
 {
     [Header("Template of tile to spawn")] public GameObject tileTemplate;
-    [Space(20)] [SerializeField] private Vector2Int gridDimensions;
+    [Space(20)] [SerializeField] private UnityEngine.Vector2Int gridDimensions;
 
     //[Range(0.5f, 3.0f)] [SerializeField] private float offsetBetweenTiles = 0.5f;
 

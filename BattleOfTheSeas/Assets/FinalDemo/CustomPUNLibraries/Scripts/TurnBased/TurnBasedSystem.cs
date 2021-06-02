@@ -47,6 +47,7 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
 
     #region Custom Event Callbacks
 
+    [NonSerialized] public UnityAction OnBeginPreparationCallbacks;
     [NonSerialized] public UnityAction OnBeginGameCallbacks;
     [NonSerialized] public UnityAction OnBeginTurnCallbacks;
     [NonSerialized] public UnityAction OnEndTurnCallbacks;
@@ -54,6 +55,7 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
     #endregion
 
     #region MonoBehaviourCallbacks
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -65,6 +67,7 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
             Instance = this;
         }
     }
+
     private void Start()
     {
         print(PhotonNetwork.LocalPlayer.ActorNumber);
@@ -77,6 +80,7 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
     #endregion
 
     #region PublicFunctions
+
     public void BeginGame()
     {
         //Begin game Callbacks
@@ -89,10 +93,12 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
         if (PlayerTurnID == _localPlayerID)
             StartCoroutine(BeginTurn());
     }
+
     public void BeginPreparationStage()
     {
         StartCoroutine(BeginPreparation());
     }
+
     public void EndPlayerTurn()
     {
         StopAllCoroutines();
@@ -106,6 +112,7 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
         //Relays to all clients that it is now the next player's turn
         photonView.RPC("NextPlayerTurn", RpcTarget.All);
     }
+
     public float GetRemainingTime()
     {
         if (State == GameState.IN_PROGRESS)
@@ -170,6 +177,8 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
 
     private IEnumerator BeginPreparation()
     {
+        OnBeginPreparationCallbacks();
+
         State = GameState.PREPARATION;
 
         _remainingPrepDuration = _prepStateDuration;

@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class Submarine : ShipBehavior
 {
-    public override void ShipAction(TileBehaviour tile)
+    public override void ShipAction(TileBehavior tile)
     {
         StartCoroutine(RowAttack(tile));
     }
 
-    private IEnumerator RowAttack(TileBehaviour tile)
+    private IEnumerator RowAttack(TileBehavior tile)
     {
         GameObject rowParent = tile.transform.parent.gameObject;
-        TileBehaviour[] tileRow = rowParent.GetComponentsInChildren<TileBehaviour>();
+        TileBehavior[] tileRow = rowParent.GetComponentsInChildren<TileBehavior>();
 
         foreach (var tileBehaviour in tileRow)
         {

@@ -20,12 +20,12 @@ public class ShipBehavior : MonoBehaviourPun
     
     #region Private Variables
     
-    private TileBehaviour _tileShip;
+    private TileBehavior _tileShip;
     private PlayerManager _playerManager;
     private Vector3 _startPos;
 
     //New 
-    private TileBehaviour[] _tiles;
+    private TileBehavior[] _tiles;
     private int _boatLength;
 
     #endregion
@@ -36,7 +36,7 @@ public class ShipBehavior : MonoBehaviourPun
     public ShipType ShipClass;
     public int ActionCooldown = 0;
     
-    public TileBehaviour TileShip
+    public TileBehavior TileShip
     {
         get => _tileShip;
         set => _tileShip = value;
@@ -107,9 +107,22 @@ public class ShipBehavior : MonoBehaviourPun
         if (photonView.IsMine)
         {
             if (_playerManager)
+            {
                 _playerManager.SelectedShip = this;
-            else
-                Debug.Log("No player manager in scene");
+            }
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Tile"))
+        {
+            TileBehavior tile = other.GetComponent<TileBehavior>();
+
+            if (tile)
+            {
+                tile.RegisterShipOnTile(gameObject);
+            }
         }
     }
 
@@ -117,7 +130,7 @@ public class ShipBehavior : MonoBehaviourPun
     
     #region Public Functions
 
-    public virtual void ShipAction(TileBehaviour tile) { }
+    public virtual void ShipAction(TileBehavior tile) { }
 
     #endregion
 }

@@ -48,7 +48,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 0.45, z: 4}
+  m_Size: {x: 1, y: 1, z: 4}
   m_Center: {x: 0, y: 0.4, z: 1.5}
 --- !u!54 &-2662062113588592739
 Rigidbody:
@@ -65,7 +65,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 3
 --- !u!114 &-3751594218145716466
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -94,7 +94,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _shipHealth: 4
-  _armor: 2
 --- !u!114 &4000916752086903984
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -145,7 +144,7 @@ MonoBehaviour:
     SynchronizeEnabled: 1
     InterpolateOption: 0
     InterpolateRotateTowardsSpeed: 180
-    InterpolateLerpSpeed: 5
+    InterpolateLerpSpeed: 10
   m_ScaleModel:
     SynchronizeEnabled: 0
     InterpolateOption: 0

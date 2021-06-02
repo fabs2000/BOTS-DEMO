@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Cruiser : ShipBehavior
 {
-    public override void ShipAction(TileBehaviour tile)
+    public override void ShipAction(TileBehavior tile)
     {
         //print("Cruiser");
 

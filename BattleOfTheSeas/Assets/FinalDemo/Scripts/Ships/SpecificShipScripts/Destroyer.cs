@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Destroyer : ShipBehavior
 {
-    public override void ShipAction(TileBehaviour tile)
+    public override void ShipAction(TileBehavior tile)
     {
         //print("Destroyer");
         

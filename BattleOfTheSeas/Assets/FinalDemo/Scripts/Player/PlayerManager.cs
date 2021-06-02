@@ -80,8 +80,9 @@ public class PlayerManager : MonoBehaviourPun
             _rotLeft.onClick.AddListener(() => RotateShip(-1));
             _rotRight.onClick.AddListener(() => RotateShip(1));
             
-            _turnBasedSystem.OnBeginGameCallbacks += ReplicateShips;
             _turnBasedSystem.OnBeginGameCallbacks += LockShips;
+            //_turnBasedSystem.OnBeginGameCallbacks += ()=> photonView.RPC("LockShips", RpcTarget.All);
+            
             
             Menu endGame = MenuManager.Instance.GetMenu("EndGame");
             _endText = endGame.GetComponentInChildren<Text>();
@@ -127,7 +128,7 @@ public class PlayerManager : MonoBehaviourPun
         photonView.RPC("UpdateActionSelection", RpcTarget.All, newActionType);
     }
 
-    public void ManageTileActions(TileBehaviour tile)
+    public void ManageTileActions(TileBehavior tile)
     {
         if (_actionType == ActionType.BASIC_FIRE)
         {
@@ -135,6 +136,8 @@ public class PlayerManager : MonoBehaviourPun
             tile.AttackTile();
             return;
         }
+        
+        //TODO: THE PROBLEM WITH "RPCS" NOT GETTING CALLED IS BECAUSE OF DUMB SHIT, WHEN ENEMY STILL HAS SHIP BUT YOU DONT, THE REPLICATION DOES NOT HAPPEN 
         
         ShipBehavior shipAction = DetermineAction();
         
@@ -194,22 +197,16 @@ public class PlayerManager : MonoBehaviourPun
     {
         _selectedShip.transform.Rotate(Vector3.up, direction * 90);
     }
-
-    private void ReplicateShips()
-    {        
-        //Set clone ship transforms
-        _selfGrid.ReplicateShipTransforms();
-    }
-
+    
     private void LockShips()
     {
         MenuManager.Instance.OpenMenu("InGameHUD");
-        
-        //Checks for ships on each grid
-        _selfGrid.CheckForShips();
-        _enemyGrid.CheckForShips();
 
-        //Enables raycast for tiles and disables for ships
+        // //Checks for ships on each grid
+        // _selfGrid.CheckForShips();
+        // _enemyGrid.CheckForShips();
+        
+        //Enables raycast for tiles
         _enemyGrid.SetTilesLayer(0);
         _enemyGrid.SetShipLayer(2);
 
@@ -217,9 +214,13 @@ public class PlayerManager : MonoBehaviourPun
         _selfGrid.SetTilesLayer(2);
         _selfGrid.SetShipLayer(2);
 
+        //Set clone ship transforms
+        _selfGrid.ReplicateShipTransforms();
+        
         //Disables ship
         _selectedShip = null; 
     }
+    
     #endregion
 
     #region RPC
@@ -229,6 +230,30 @@ public class PlayerManager : MonoBehaviourPun
     {
         _actionType = (ActionType) newActionType;
     }
+
+    // [PunRPC]
+    // private void LockShips()
+    // {
+    //     MenuManager.Instance.OpenMenu("InGameHUD");
+    //     
+    //     //Set clone ship transforms
+    //     _selfGrid.ReplicateShipTransforms();
+    //     
+    //     //Checks for ships on each grid
+    //     _selfGrid.CheckForShips();
+    //     _enemyGrid.CheckForShips();
+    //
+    //     //Enables raycast for tiles and disables for ships
+    //     _enemyGrid.SetTilesLayer(0);
+    //     _enemyGrid.SetShipLayer(2);
+    //
+    //     //Disables raycast for player ships and tiles
+    //     _selfGrid.SetTilesLayer(2);
+    //     _selfGrid.SetShipLayer(2);
+    //
+    //     //Disables ship
+    //     _selectedShip = null; 
+    // }
 
     #endregion
 }

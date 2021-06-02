@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
-public class TileBehaviour : MonoBehaviourPun
+using UnityEngine.WSA;
+
+public class TileBehavior : MonoBehaviourPun
 {
     public enum TileState
     {
@@ -24,7 +26,7 @@ public class TileBehaviour : MonoBehaviourPun
     private GridBehaviour _parentGrid;
 
     private TileState _tileState = TileState.CLEAR;
-    private int _tileID;
+    private UnityEngine.Vector2Int _tileID;
 
     private int _maxUntargetableRounds = 2;
 
@@ -34,12 +36,14 @@ public class TileBehaviour : MonoBehaviourPun
 
     public bool HasShip = false;
     
+    [NonSerialized] public TileBehavior CloneTile;
+
     public GridBehaviour ParentGrid
     {
         get => _parentGrid;
         set => _parentGrid = value;
     }
-    public int TileID
+    public UnityEngine.Vector2Int TileID
     {
         get => _tileID;
         set => _tileID = value;
@@ -51,32 +55,35 @@ public class TileBehaviour : MonoBehaviourPun
     #region MonoBehaviourCallbacks
     void Start()
     {
-        _playerManager = PlayerManager.Instance;
         _turnBasedSystem = TurnBasedSystem.Instance;
-
         _turnBasedSystem.OnEndTurnCallbacks += ResetState;
         
-        _renderer = GetComponent<MeshRenderer>();
+        //Variable initialize 
+        _playerManager = PlayerManager.Instance;
 
+        //Missile and visuals
+        _renderer = GetComponent<MeshRenderer>();
         _missile = transform.GetChild(0).gameObject;
     }
     
-    // private void OnTriggerEnter(Collider other)
-    // {
-    //     if (other.CompareTag("Ship"))
-    //     {
-    //         _shipRef = other.gameObject;
-    //         HasShip = true;
-    //     }
-    // }
-    // private void OnTriggerExit(Collider other)
-    // {
-    //     if (other.CompareTag("Ship"))
-    //     {
-    //         _shipRef = null;
-    //         HasShip = false;
-    //     }
-    // }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Ship"))
+        {
+            _shipRef = other.gameObject;
+            HasShip = true;
+            ChangeTileColor(Color.magenta);
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Ship"))
+        {
+            _shipRef = null;
+            HasShip = false;
+            ChangeTileColor(Color.blue);
+        }
+    }
     
     private void OnMouseDown()
     {
@@ -86,7 +93,7 @@ public class TileBehaviour : MonoBehaviourPun
             if (_playerManager.Action != PlayerManager.ActionType.NO_ACTION)
             {
                 print("Tile ID: " + _tileID);
-                
+
                 //Replicate Actions on Selected Tile
                 photonView.RPC("TileAction", RpcTarget.AllBuffered);
 
@@ -116,7 +123,7 @@ public class TileBehaviour : MonoBehaviourPun
     #endregion
 
     #region Public Functions
-    
+
     // public void CheckForShip()
     // {
     //     RaycastHit hit;
@@ -133,11 +140,7 @@ public class TileBehaviour : MonoBehaviourPun
     //         
     //         if (objectHit.CompareTag("Ship"))
     //         {
-    //             print(objectHit.name + " Ship Hit");
-    //             _shipRef = gameObject;
-    //             HasShip = true;
-    //             
-    //             ChangeTileColor(Color.magenta);
+
     //         }
     //     }
     //     else
@@ -148,7 +151,27 @@ public class TileBehaviour : MonoBehaviourPun
     //         ChangeTileColor(Color.blue);
     //     }
     // }
+
+    public void RegisterShipOnTile()
+    {
+        HasShip = true;
+        ChangeTileColor(Color.magenta);
+    }
+
     
+    public void RegisterShipOnTile(GameObject ship)
+    {
+        _shipRef = ship;
+        HasShip = true;
+        ChangeTileColor(Color.magenta);
+    }
+
+    private void UnRegisterTile()
+    {
+        HasShip = true;
+        ChangeTileColor(Color.blue);
+    }
+
     public void AttackTile()
     {
         if (_tileState == TileState.TILE_DESTROYED || _tileState == TileState.UNTARGETABLE)
@@ -185,7 +208,7 @@ public class TileBehaviour : MonoBehaviourPun
             return;
 
         ChangeTileColor(Color.green);
-        
+
         _tileState = TileState.UNTARGETABLE;
     }
 
@@ -207,27 +230,29 @@ public class TileBehaviour : MonoBehaviourPun
             }
         }
     }
-    
+
     #endregion
 
     #region Private Functions
-    
+
     private void PlaceShip()
     {
         Vector3 tilePos = transform.position;
         ShipBehavior ship = _playerManager.SelectedShip;
-
-        //Set ship position
+        
+        if(ship.TileShip)
+            ship.TileShip.UnRegisterTile();
+        
+        //Set ship position and parent tile
         ship.TileShip = this;
         ship.transform.position = tilePos;
-        
-        HasShip = true;
+
+        RegisterShipOnTile();
     }
     private void ChangeTileColor(Color newColor)
     {
         _renderer.material.color = newColor;
     }
-
     private void ResetState()
     {
         if (_tileState == TileState.UNTARGETABLE)
@@ -241,7 +266,7 @@ public class TileBehaviour : MonoBehaviourPun
             }
         }
     }
-    
+
     #endregion
 
     #region RPC
@@ -252,7 +277,7 @@ public class TileBehaviour : MonoBehaviourPun
         if (_playerManager)
         {
             _playerManager.ManageTileActions(this);
-            _parentGrid.ReplicateTileAction(_tileID);
+            _parentGrid.ReplicateTileAction(this);
         }
     }
 
