@@ -47,10 +47,10 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
 
     #region Custom Event Callbacks
 
-    [NonSerialized] public UnityAction OnBeginPreparationCallbacks;
-    [NonSerialized] public UnityAction OnBeginGameCallbacks;
-    [NonSerialized] public UnityAction OnBeginTurnCallbacks;
-    [NonSerialized] public UnityAction OnEndTurnCallbacks;
+    //[NonSerialized] public readonly UnityEvent OnBeginPreparationCallbacks = new UnityEvent();
+    [NonSerialized] public readonly UnityEvent OnBeginGameCallbacks = new UnityEvent();
+    [NonSerialized] public readonly UnityEvent OnBeginTurnCallbacks = new UnityEvent();
+    [NonSerialized] public readonly UnityEvent OnEndTurnCallbacks = new UnityEvent();
 
     #endregion
 
@@ -84,7 +84,7 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
     public void BeginGame()
     {
         //Begin game Callbacks
-        OnBeginGameCallbacks();
+        OnBeginGameCallbacks.Invoke();
 
         //Game always starts with host player
         PlayerTurnID = 1;
@@ -107,7 +107,7 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
         IsPLayerTurnOver = true;
 
         //Turn End Callbacks
-        OnEndTurnCallbacks();
+        OnEndTurnCallbacks.Invoke();
 
         //Relays to all clients that it is now the next player's turn
         photonView.RPC("NextPlayerTurn", RpcTarget.All);
@@ -157,7 +157,7 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
 
     private IEnumerator BeginTurn()
     {
-        OnBeginTurnCallbacks();
+        OnBeginTurnCallbacks.Invoke();
 
         State = GameState.IN_PROGRESS;
 
@@ -177,8 +177,6 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
 
     private IEnumerator BeginPreparation()
     {
-        OnBeginPreparationCallbacks();
-
         State = GameState.PREPARATION;
 
         _remainingPrepDuration = _prepStateDuration;

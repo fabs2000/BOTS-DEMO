@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
-using UnityEngine.WSA;
 
 public class TileBehavior : MonoBehaviourPun
 {
@@ -26,7 +25,7 @@ public class TileBehavior : MonoBehaviourPun
     private GridBehaviour _parentGrid;
 
     private TileState _tileState = TileState.CLEAR;
-    private UnityEngine.Vector2Int _tileID;
+    private Vector2Int _tileID;
 
     private int _maxUntargetableRounds = 2;
 
@@ -36,19 +35,16 @@ public class TileBehavior : MonoBehaviourPun
 
     public bool HasShip = false;
     
-    [NonSerialized] public TileBehavior CloneTile;
-
     public GridBehaviour ParentGrid
     {
         get => _parentGrid;
         set => _parentGrid = value;
     }
-    public UnityEngine.Vector2Int TileID
+    public Vector2Int TileID
     {
         get => _tileID;
         set => _tileID = value;
     }
-    public TileState State => _tileState;
 
     #endregion
 
@@ -56,7 +52,7 @@ public class TileBehavior : MonoBehaviourPun
     void Start()
     {
         _turnBasedSystem = TurnBasedSystem.Instance;
-        _turnBasedSystem.OnEndTurnCallbacks += ResetState;
+        _turnBasedSystem.OnEndTurnCallbacks.AddListener(ResetState);
         
         //Variable initialize 
         _playerManager = PlayerManager.Instance;
@@ -72,7 +68,6 @@ public class TileBehavior : MonoBehaviourPun
         {
             _shipRef = other.gameObject;
             HasShip = true;
-            ChangeTileColor(Color.magenta);
         }
     }
     private void OnTriggerExit(Collider other)
@@ -81,7 +76,6 @@ public class TileBehavior : MonoBehaviourPun
         {
             _shipRef = null;
             HasShip = false;
-            ChangeTileColor(Color.blue);
         }
     }
     

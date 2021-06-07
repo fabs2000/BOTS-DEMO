@@ -73,14 +73,14 @@ public class PlayerManager : MonoBehaviourPun
         _turnBasedSystem = TurnBasedSystem.Instance;
 
         //At the beginning of each turn reset action type to none
-        _turnBasedSystem.OnBeginTurnCallbacks += ()=> UpdateActionSelection();
+        _turnBasedSystem.OnBeginTurnCallbacks.AddListener(()=>UpdateActionSelection(6));
 
         if (_rotLeft && _rotRight)
         {
             _rotLeft.onClick.AddListener(() => RotateShip(-1));
             _rotRight.onClick.AddListener(() => RotateShip(1));
             
-            _turnBasedSystem.OnBeginGameCallbacks += LockShips;
+            _turnBasedSystem.OnBeginGameCallbacks.AddListener(LockShips);
             //_turnBasedSystem.OnBeginGameCallbacks += ()=> photonView.RPC("LockShips", RpcTarget.All);
             
             
@@ -226,34 +226,10 @@ public class PlayerManager : MonoBehaviourPun
     #region RPC
 
     [PunRPC]
-    private void UpdateActionSelection(int newActionType = 6)
+    private void UpdateActionSelection(int newActionType)
     {
         _actionType = (ActionType) newActionType;
     }
-
-    // [PunRPC]
-    // private void LockShips()
-    // {
-    //     MenuManager.Instance.OpenMenu("InGameHUD");
-    //     
-    //     //Set clone ship transforms
-    //     _selfGrid.ReplicateShipTransforms();
-    //     
-    //     //Checks for ships on each grid
-    //     _selfGrid.CheckForShips();
-    //     _enemyGrid.CheckForShips();
-    //
-    //     //Enables raycast for tiles and disables for ships
-    //     _enemyGrid.SetTilesLayer(0);
-    //     _enemyGrid.SetShipLayer(2);
-    //
-    //     //Disables raycast for player ships and tiles
-    //     _selfGrid.SetTilesLayer(2);
-    //     _selfGrid.SetShipLayer(2);
-    //
-    //     //Disables ship
-    //     _selectedShip = null; 
-    // }
 
     #endregion
 }

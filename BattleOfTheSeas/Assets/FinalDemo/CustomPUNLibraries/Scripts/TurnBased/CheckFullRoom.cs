@@ -7,7 +7,7 @@ using UnityEngine.Events;
 
 public class CheckFullRoom : MonoBehaviourPunCallbacks
 {
-    [SerializeField]private UnityEvent BeginGameActions;
+    [SerializeField]private UnityEvent BeginGameActions = new UnityEvent();
     
     void Start()
     {

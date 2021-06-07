@@ -33,7 +33,7 @@ public class GridBehaviour : MonoBehaviour
 
     private void Start()
     {
-        TurnBasedSystem.Instance.OnBeginPreparationCallbacks += SetTilesClones;
+        //TurnBasedSystem.Instance.OnBeginPreparationCallbacks.AddListener(SetTilesClones);
         
         _tiles = gameObject.GetComponentsInChildren<TileBehavior>();
 
@@ -217,13 +217,6 @@ public class GridBehaviour : MonoBehaviour
             yield return new WaitForSeconds(0.2f);
         }
     }
-    private void SetTilesClones()
-    {
-        foreach (var tile in _tiles)
-        {
-            tile.CloneTile = _otherBoard.Tiles2D[tile.TileID.x, tile.TileID.y];
-        }
-    }
-
+    
     #endregion
 }

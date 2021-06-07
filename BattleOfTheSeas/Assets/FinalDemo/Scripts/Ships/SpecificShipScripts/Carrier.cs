@@ -24,14 +24,7 @@ public class Carrier : ShipBehavior
         
         //Center of the attack
         tile.AttackTile();
-        
-        //Backup
-        // tiles[centerTileId.x, centerTileId.y + 1].AttackTile();
-        // tiles[centerTileId.x, centerTileId.y - 1].AttackTile();
-        // tiles[centerTileId.x + 1, centerTileId.y].AttackTile();
-        // tiles[centerTileId.x - 1, centerTileId.y].AttackTile();
-        //
-        
+
         //Attacks surrounding tiles
         for (int i = 0; i < 4; i++)
         {

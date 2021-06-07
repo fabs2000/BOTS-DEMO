@@ -11,13 +11,13 @@ public class Submarine : ShipBehavior
 
     private IEnumerator RowAttack(TileBehavior tile)
     {
-        GameObject rowParent = tile.transform.parent.gameObject;
-        TileBehavior[] tileRow = rowParent.GetComponentsInChildren<TileBehavior>();
+        TileBehavior[,] tiles = tile.ParentGrid.Tiles2D;
+        Vector2Int tileID = tile.TileID;
 
-        foreach (var tileBehaviour in tileRow)
+        for (int i = 0; i < tiles.GetLength(0); i++)
         {
             yield return new WaitForSeconds(0.1f);
-            tileBehaviour.AttackTile();
+            tiles[tileID.x, i].AttackTile();
         }
     }
 }
