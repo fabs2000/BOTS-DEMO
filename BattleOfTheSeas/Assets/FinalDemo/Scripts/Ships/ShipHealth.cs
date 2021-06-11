@@ -5,29 +5,28 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
-public class ShipHealth : MonoBehaviour
+public class ShipHealth : MonoBehaviourPun
 {
     public int _shipHealth = 0;
 
-    private PlayerManager _manager;
     private GameObject _shipMesh;
-    private ShipBehavior _shipBehavior;
-
+    private ShipBehavior _ship;
+    private PlayerManager _manager;
+    
     private void Start()
     {
-        _manager = PlayerManager.Instance;
         _shipMesh = transform.GetChild(0).gameObject;
-        _shipBehavior = GetComponent<ShipBehavior>();
+        _ship = GetComponent<ShipBehavior>();
+        _manager = FindObjectOfType<PlayerManager>();
     }
 
     public void ShipHit()
     {
         --_shipHealth;
-        
+
         if (_shipHealth <= 0)
         {
-            _manager.SelfGrid.RemoveShipFromGrid(_shipBehavior);
-
+            _manager.RemoveShipFromGrid(_ship);
             _shipMesh.SetActive(true);
         }
     }

@@ -22,7 +22,6 @@ public class Battleship : ShipBehavior
                 if (tileId.x >= 0 && tileId.x <= tiles.GetLength(0) &&
                     tileId.y >= 0 && tileId.y <= tiles.GetLength(1))
                 {
-                    print(tileId);
                     tiles[tileId.x, tileId.y].DefendTile();
                 }
             }

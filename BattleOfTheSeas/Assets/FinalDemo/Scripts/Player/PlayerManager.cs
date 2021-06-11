@@ -74,6 +74,7 @@ public class PlayerManager : MonoBehaviourPun
 
         //At the beginning of each turn reset action type to none
         _turnBasedSystem.OnBeginTurnCallbacks.AddListener(()=>UpdateActionSelection(6));
+        //_turnBasedSystem.OnEndTurnCallbacks.AddListener(GameStateActions);
 
         if (_rotLeft && _rotRight)
         {
@@ -81,9 +82,7 @@ public class PlayerManager : MonoBehaviourPun
             _rotRight.onClick.AddListener(() => RotateShip(1));
             
             _turnBasedSystem.OnBeginGameCallbacks.AddListener(LockShips);
-            //_turnBasedSystem.OnBeginGameCallbacks += ()=> photonView.RPC("LockShips", RpcTarget.All);
-            
-            
+
             Menu endGame = MenuManager.Instance.GetMenu("EndGame");
             _endText = endGame.GetComponentInChildren<Text>();
         }
@@ -91,8 +90,26 @@ public class PlayerManager : MonoBehaviourPun
         {
             Debug.LogError("HUD Buttons not loaded");
         }
+    }
 
-        StartCoroutine(GameStateActions());
+    private void Update()
+    {
+        if (!_turnBasedSystem) return;
+        
+        switch (_turnBasedSystem.State)
+        {
+            case TurnBasedSystem.GameState.LOCAL_WON:
+                _endText.text = "YOU WON";
+                MenuManager.Instance.OpenMenu("EndGame");
+                
+                break;
+
+            case TurnBasedSystem.GameState.OTHER_WON:
+                _endText.text = "ENEMY WON";
+                MenuManager.Instance.OpenMenu("EndGame");
+                
+                break;
+        }
     }
 
     #endregion
@@ -137,7 +154,7 @@ public class PlayerManager : MonoBehaviourPun
             return;
         }
         
-        //TODO: THE PROBLEM WITH "RPCS" NOT GETTING CALLED IS BECAUSE OF DUMB SHIT, WHEN ENEMY STILL HAS SHIP BUT YOU DONT, THE REPLICATION DOES NOT HAPPEN 
+        //TODO: THE PROBLEM WITH "RPCs" NOT GETTING CALLED IS BECAUSE OF DUMB SHIT, WHEN ENEMY STILL HAS SHIP BUT YOU DONT, THE REPLICATION DOES NOT HAPPEN 
         
         ShipBehavior shipAction = DetermineAction();
         
@@ -146,35 +163,53 @@ public class PlayerManager : MonoBehaviourPun
             shipAction.ShipAction(tile);
     }
     
+    public void RemoveShipFromGrid(ShipBehavior ship)
+    {
+        if (_enemyGrid.FindShipToRemove(ship))
+        {
+            Debug.Log("enemy ships now: " + _enemyGrid.ShipsRemaining);
+            if (_enemyGrid.ShipsRemaining == 0)
+            {
+                print("Local Won");
+                _turnBasedSystem.State = TurnBasedSystem.GameState.LOCAL_WON;
+                _turnBasedSystem.EndGame();
+            }
+        }
+        else if (_selfGrid.FindShipToRemove(ship))
+        {
+            Debug.Log("player ships now: " + _selfGrid.ShipsRemaining);
+            if (_selfGrid.ShipsRemaining == 0)
+            {
+                print("Other Won");
+                _turnBasedSystem.State = TurnBasedSystem.GameState.OTHER_WON;
+                _turnBasedSystem.EndGame();
+            }
+        }
+    }
+    
     #endregion
 
     #region Private Functions
-    private IEnumerator GameStateActions()
-    {
-        while (true)
-        {
-            if (!_turnBasedSystem) yield return null;
-
-            switch (_turnBasedSystem.State)
-            {
-                case TurnBasedSystem.GameState.LOCAL_WON:
-                    _endText.text = "YOU WON";
-                    MenuManager.Instance.OpenMenu("EndGame");
-
-                    StopAllCoroutines();
-                    break;
-
-                case TurnBasedSystem.GameState.OTHER_WON:
-                    _endText.text = "ENEMY WON";
-                    MenuManager.Instance.OpenMenu("EndGame");
-
-                    StopAllCoroutines();
-                    break;
-            }
-
-            yield return new WaitForSeconds(1f);
-        }
-    }
+    
+    //private void GameStateActions()
+    // {
+    //     if (!_turnBasedSystem) return;
+    //     
+    //     switch (_turnBasedSystem.State)
+    //     {
+    //         case TurnBasedSystem.GameState.LOCAL_WON:
+    //             _endText.text = "YOU WON";
+    //             MenuManager.Instance.OpenMenu("EndGame");
+    //             
+    //             break;
+    //
+    //         case TurnBasedSystem.GameState.OTHER_WON:
+    //             _endText.text = "ENEMY WON";
+    //             MenuManager.Instance.OpenMenu("EndGame");
+    //             
+    //             break;
+    //     }
+    // }
 
     private ShipBehavior DetermineAction()
     {
@@ -202,10 +237,6 @@ public class PlayerManager : MonoBehaviourPun
     {
         MenuManager.Instance.OpenMenu("InGameHUD");
 
-        // //Checks for ships on each grid
-        // _selfGrid.CheckForShips();
-        // _enemyGrid.CheckForShips();
-        
         //Enables raycast for tiles
         _enemyGrid.SetTilesLayer(0);
         _enemyGrid.SetShipLayer(2);
@@ -216,7 +247,7 @@ public class PlayerManager : MonoBehaviourPun
 
         //Set clone ship transforms
         _selfGrid.ReplicateShipTransforms();
-        
+
         //Disables ship
         _selectedShip = null; 
     }
@@ -230,6 +261,6 @@ public class PlayerManager : MonoBehaviourPun
     {
         _actionType = (ActionType) newActionType;
     }
-
+    
     #endregion
 }

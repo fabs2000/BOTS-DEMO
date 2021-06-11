@@ -176,6 +176,10 @@ PrefabInstance:
       propertyPath: ShipClass
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: -4068201613604119606, guid: e9b5fbd7c27832549a5df5a0bcc89488, type: 3}
+      propertyPath: ParentGrid
+      value: 
+      objectReference: {fileID: 1525645717}
     - target: {fileID: 8098535627154473843, guid: e9b5fbd7c27832549a5df5a0bcc89488, type: 3}
       propertyPath: m_RootOrder
       value: 6
@@ -831,6 +835,18 @@ PrefabInstance:
       propertyPath: ObservedComponents.Array.size
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -3951515965655183760, guid: 4632736b7279f3143aec537916beaf34, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -3951515965655183760, guid: 4632736b7279f3143aec537916beaf34, type: 3}
+      propertyPath: ParentGrid
+      value: 
+      objectReference: {fileID: 1421499272}
+    - target: {fileID: 2650844609954631880, guid: 4632736b7279f3143aec537916beaf34, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7012318853125527539, guid: 4632736b7279f3143aec537916beaf34, type: 3}
       propertyPath: m_Layer
       value: 0
@@ -1021,6 +1037,10 @@ PrefabInstance:
       propertyPath: ShipClass
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: -3751594218145716466, guid: 5f6cb5217cfc8fd41bde15eb325120e4, type: 3}
+      propertyPath: ParentGrid
+      value: 
+      objectReference: {fileID: 1525645717}
     - target: {fileID: 3514230814129642156, guid: 5f6cb5217cfc8fd41bde15eb325120e4, type: 3}
       propertyPath: m_Name
       value: GuestBattleship
@@ -1695,6 +1715,18 @@ PrefabInstance:
       propertyPath: ObservedComponents.Array.size
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -4068201613604119606, guid: e9b5fbd7c27832549a5df5a0bcc89488, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -4068201613604119606, guid: e9b5fbd7c27832549a5df5a0bcc89488, type: 3}
+      propertyPath: ParentGrid
+      value: 
+      objectReference: {fileID: 1154150252}
+    - target: {fileID: -1480845482379877330, guid: e9b5fbd7c27832549a5df5a0bcc89488, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2112506795772796403, guid: e9b5fbd7c27832549a5df5a0bcc89488, type: 3}
       propertyPath: m_Layer
       value: 0
@@ -1918,6 +1950,10 @@ PrefabInstance:
       propertyPath: CloneShip
       value: 
       objectReference: {fileID: 2027941428}
+    - target: {fileID: -3751594218145716466, guid: 5f6cb5217cfc8fd41bde15eb325120e4, type: 3}
+      propertyPath: ParentGrid
+      value: 
+      objectReference: {fileID: 1036807391}
     - target: {fileID: 3514230814129642156, guid: 5f6cb5217cfc8fd41bde15eb325120e4, type: 3}
       propertyPath: m_Name
       value: HostBattleship
@@ -2146,6 +2182,10 @@ PrefabInstance:
       propertyPath: CloneShip
       value: 
       objectReference: {fileID: 443997454}
+    - target: {fileID: -4068201613604119606, guid: e9b5fbd7c27832549a5df5a0bcc89488, type: 3}
+      propertyPath: ParentGrid
+      value: 
+      objectReference: {fileID: 1036807391}
     - target: {fileID: 8098535627154473843, guid: e9b5fbd7c27832549a5df5a0bcc89488, type: 3}
       propertyPath: m_RootOrder
       value: 6
@@ -2488,6 +2528,10 @@ PrefabInstance:
       propertyPath: CloneShip
       value: 
       objectReference: {fileID: 1803157108}
+    - target: {fileID: 3580468837682325003, guid: 671a2bcf534205f479e4b910e3883528, type: 3}
+      propertyPath: ParentGrid
+      value: 
+      objectReference: {fileID: 1036807391}
     - target: {fileID: 3844327108752223957, guid: 671a2bcf534205f479e4b910e3883528, type: 3}
       propertyPath: m_UseGravity
       value: 0
@@ -3166,7 +3210,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-166888
+  m_Name: pb_Mesh-361170
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -3335,7 +3379,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-169982
+  m_Name: pb_Mesh-364266
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -3797,6 +3841,10 @@ PrefabInstance:
       propertyPath: CloneShip
       value: 
       objectReference: {fileID: 1394873656}
+    - target: {fileID: -3951515965655183760, guid: 4632736b7279f3143aec537916beaf34, type: 3}
+      propertyPath: ParentGrid
+      value: 
+      objectReference: {fileID: 1036807391}
     - target: {fileID: 8494328676813089510, guid: 4632736b7279f3143aec537916beaf34, type: 3}
       propertyPath: m_Name
       value: HostSubmarine
@@ -4771,6 +4819,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 904852942}
     m_Modifications:
+    - target: {fileID: -5009597594613471527, guid: f3fc01e691e9a554aaf02a2a872f4228, type: 3}
+      propertyPath: sceneViewId
+      value: 547
+      objectReference: {fileID: 0}
     - target: {fileID: 61616598985583528, guid: f3fc01e691e9a554aaf02a2a872f4228, type: 3}
       propertyPath: sceneViewId
       value: 393
@@ -4895,6 +4947,10 @@ PrefabInstance:
       propertyPath: sceneViewId
       value: 399
       objectReference: {fileID: 0}
+    - target: {fileID: 1549162015643233955, guid: f3fc01e691e9a554aaf02a2a872f4228, type: 3}
+      propertyPath: _enemyBoard
+      value: 
+      objectReference: {fileID: 1525645717}
     - target: {fileID: 1549162015643233955, guid: f3fc01e691e9a554aaf02a2a872f4228, type: 3}
       propertyPath: _otherBoard
       value: 
@@ -5776,6 +5832,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 777365009}
     m_Modifications:
+    - target: {fileID: -5009597594613471527, guid: f3fc01e691e9a554aaf02a2a872f4228, type: 3}
+      propertyPath: sceneViewId
+      value: 545
+      objectReference: {fileID: 0}
     - target: {fileID: 24270085129891580, guid: f3fc01e691e9a554aaf02a2a872f4228, type: 3}
       propertyPath: m_Layer
       value: 2
@@ -6012,6 +6072,10 @@ PrefabInstance:
       propertyPath: sceneViewId
       value: 299
       objectReference: {fileID: 0}
+    - target: {fileID: 1549162015643233955, guid: f3fc01e691e9a554aaf02a2a872f4228, type: 3}
+      propertyPath: _enemyBoard
+      value: 
+      objectReference: {fileID: 1421499272}
     - target: {fileID: 1549162015643233955, guid: f3fc01e691e9a554aaf02a2a872f4228, type: 3}
       propertyPath: _otherBoard
       value: 
@@ -7722,6 +7786,10 @@ PrefabInstance:
       propertyPath: ShipClass
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -3951515965655183760, guid: 4632736b7279f3143aec537916beaf34, type: 3}
+      propertyPath: ParentGrid
+      value: 
+      objectReference: {fileID: 1525645717}
     - target: {fileID: 8494328676813089510, guid: 4632736b7279f3143aec537916beaf34, type: 3}
       propertyPath: m_Name
       value: GuestSubmarine
@@ -8235,6 +8303,18 @@ PrefabInstance:
       propertyPath: ObservedComponents.Array.size
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -3951515965655183760, guid: 4632736b7279f3143aec537916beaf34, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -3951515965655183760, guid: 4632736b7279f3143aec537916beaf34, type: 3}
+      propertyPath: ParentGrid
+      value: 
+      objectReference: {fileID: 1154150252}
+    - target: {fileID: 2650844609954631880, guid: 4632736b7279f3143aec537916beaf34, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7012318853125527539, guid: 4632736b7279f3143aec537916beaf34, type: 3}
       propertyPath: m_Layer
       value: 0
@@ -8443,6 +8523,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1683504015}
     m_Modifications:
+    - target: {fileID: -5009597594613471527, guid: f3fc01e691e9a554aaf02a2a872f4228, type: 3}
+      propertyPath: sceneViewId
+      value: 548
+      objectReference: {fileID: 0}
     - target: {fileID: 24270085129891580, guid: f3fc01e691e9a554aaf02a2a872f4228, type: 3}
       propertyPath: m_Layer
       value: 2
@@ -8679,6 +8763,10 @@ PrefabInstance:
       propertyPath: sceneViewId
       value: 199
       objectReference: {fileID: 0}
+    - target: {fileID: 1549162015643233955, guid: f3fc01e691e9a554aaf02a2a872f4228, type: 3}
+      propertyPath: _enemyBoard
+      value: 
+      objectReference: {fileID: 1154150252}
     - target: {fileID: 1549162015643233955, guid: f3fc01e691e9a554aaf02a2a872f4228, type: 3}
       propertyPath: _otherBoard
       value: 
@@ -10286,7 +10374,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-163830
+  m_Name: pb_Mesh-358110
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -10542,6 +10630,10 @@ PrefabInstance:
       propertyPath: CloneShip
       value: 
       objectReference: {fileID: 1904666465}
+    - target: {fileID: -7667248086610844366, guid: 8e23b60ebe1a12e4384a129827abdda8, type: 3}
+      propertyPath: ParentGrid
+      value: 
+      objectReference: {fileID: 1036807391}
     - target: {fileID: 8098535627154473843, guid: 8e23b60ebe1a12e4384a129827abdda8, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -10751,8 +10843,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HasPreparationStage: 1
-  _prepStateDuration: 20
-  _turnDuration: 15
+  _prepStateDuration: 35
+  _turnDuration: 20
 --- !u!1 &1521433372
 GameObject:
   m_ObjectHideFlags: 0
@@ -10792,6 +10884,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 391983992}
     m_Modifications:
+    - target: {fileID: -5009597594613471527, guid: f3fc01e691e9a554aaf02a2a872f4228, type: 3}
+      propertyPath: sceneViewId
+      value: 546
+      objectReference: {fileID: 0}
     - target: {fileID: 61616598985583528, guid: f3fc01e691e9a554aaf02a2a872f4228, type: 3}
       propertyPath: sceneViewId
       value: 93
@@ -10916,6 +11012,10 @@ PrefabInstance:
       propertyPath: sceneViewId
       value: 99
       objectReference: {fileID: 0}
+    - target: {fileID: 1549162015643233955, guid: f3fc01e691e9a554aaf02a2a872f4228, type: 3}
+      propertyPath: _enemyBoard
+      value: 
+      objectReference: {fileID: 1036807391}
     - target: {fileID: 1549162015643233955, guid: f3fc01e691e9a554aaf02a2a872f4228, type: 3}
       propertyPath: _otherBoard
       value: 
@@ -12174,6 +12274,10 @@ PrefabInstance:
       propertyPath: CloneShip
       value: 
       objectReference: {fileID: 1853379665}
+    - target: {fileID: 3580468837682325003, guid: 671a2bcf534205f479e4b910e3883528, type: 3}
+      propertyPath: ParentGrid
+      value: 
+      objectReference: {fileID: 1525645717}
     - target: {fileID: 3844327108752223957, guid: 671a2bcf534205f479e4b910e3883528, type: 3}
       propertyPath: m_UseGravity
       value: 0
@@ -12545,6 +12649,10 @@ PrefabInstance:
       propertyPath: ShipClass
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: -7667248086610844366, guid: 8e23b60ebe1a12e4384a129827abdda8, type: 3}
+      propertyPath: ParentGrid
+      value: 
+      objectReference: {fileID: 1525645717}
     - target: {fileID: 8098535627154473843, guid: 8e23b60ebe1a12e4384a129827abdda8, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -12835,6 +12943,10 @@ PrefabInstance:
       propertyPath: ObservedComponents.Array.size
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -6567874233008992253, guid: 671a2bcf534205f479e4b910e3883528, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 330059674797785529, guid: 671a2bcf534205f479e4b910e3883528, type: 3}
       propertyPath: m_IsTrigger
       value: 1
@@ -12895,6 +13007,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -1.021
       objectReference: {fileID: 0}
+    - target: {fileID: 3580468837682325003, guid: 671a2bcf534205f479e4b910e3883528, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3580468837682325003, guid: 671a2bcf534205f479e4b910e3883528, type: 3}
+      propertyPath: ParentGrid
+      value: 
+      objectReference: {fileID: 1154150252}
     - target: {fileID: 3844327108752223957, guid: 671a2bcf534205f479e4b910e3883528, type: 3}
       propertyPath: m_UseGravity
       value: 0
@@ -12948,6 +13068,18 @@ PrefabInstance:
     - target: {fileID: -8831222217231911179, guid: 8e23b60ebe1a12e4384a129827abdda8, type: 3}
       propertyPath: ObservedComponents.Array.size
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7667248086610844366, guid: 8e23b60ebe1a12e4384a129827abdda8, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7667248086610844366, guid: 8e23b60ebe1a12e4384a129827abdda8, type: 3}
+      propertyPath: ParentGrid
+      value: 
+      objectReference: {fileID: 1421499272}
+    - target: {fileID: -6797897136085737853, guid: 8e23b60ebe1a12e4384a129827abdda8, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2112506795772796403, guid: 8e23b60ebe1a12e4384a129827abdda8, type: 3}
       propertyPath: m_Layer
@@ -13050,6 +13182,10 @@ PrefabInstance:
       propertyPath: ObservedComponents.Array.size
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -6567874233008992253, guid: 671a2bcf534205f479e4b910e3883528, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 330059674797785529, guid: 671a2bcf534205f479e4b910e3883528, type: 3}
       propertyPath: m_IsTrigger
       value: 1
@@ -13110,6 +13246,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -1.021
       objectReference: {fileID: 0}
+    - target: {fileID: 3580468837682325003, guid: 671a2bcf534205f479e4b910e3883528, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3580468837682325003, guid: 671a2bcf534205f479e4b910e3883528, type: 3}
+      propertyPath: ParentGrid
+      value: 
+      objectReference: {fileID: 1421499272}
     - target: {fileID: 3844327108752223957, guid: 671a2bcf534205f479e4b910e3883528, type: 3}
       propertyPath: m_UseGravity
       value: 0
@@ -13188,6 +13332,18 @@ PrefabInstance:
     - target: {fileID: -8831222217231911179, guid: 8e23b60ebe1a12e4384a129827abdda8, type: 3}
       propertyPath: ObservedComponents.Array.size
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7667248086610844366, guid: 8e23b60ebe1a12e4384a129827abdda8, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7667248086610844366, guid: 8e23b60ebe1a12e4384a129827abdda8, type: 3}
+      propertyPath: ParentGrid
+      value: 
+      objectReference: {fileID: 1154150252}
+    - target: {fileID: -6797897136085737853, guid: 8e23b60ebe1a12e4384a129827abdda8, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2112506795772796403, guid: 8e23b60ebe1a12e4384a129827abdda8, type: 3}
       propertyPath: m_Layer
@@ -13287,6 +13443,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1683504015}
     m_Modifications:
+    - target: {fileID: -3751594218145716466, guid: 5f6cb5217cfc8fd41bde15eb325120e4, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -3751594218145716466, guid: 5f6cb5217cfc8fd41bde15eb325120e4, type: 3}
+      propertyPath: ParentGrid
+      value: 
+      objectReference: {fileID: 1421499272}
     - target: {fileID: 1126080536669366799, guid: 5f6cb5217cfc8fd41bde15eb325120e4, type: 3}
       propertyPath: m_IsTrigger
       value: 1
@@ -13362,6 +13526,10 @@ PrefabInstance:
     - target: {fileID: 4291612561408622614, guid: 5f6cb5217cfc8fd41bde15eb325120e4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7799283333823705734, guid: 5f6cb5217cfc8fd41bde15eb325120e4, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5f6cb5217cfc8fd41bde15eb325120e4, type: 3}
@@ -13680,6 +13848,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 777365009}
     m_Modifications:
+    - target: {fileID: -3751594218145716466, guid: 5f6cb5217cfc8fd41bde15eb325120e4, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -3751594218145716466, guid: 5f6cb5217cfc8fd41bde15eb325120e4, type: 3}
+      propertyPath: ParentGrid
+      value: 
+      objectReference: {fileID: 1154150252}
     - target: {fileID: 1126080536669366799, guid: 5f6cb5217cfc8fd41bde15eb325120e4, type: 3}
       propertyPath: m_IsTrigger
       value: 1
@@ -13755,6 +13931,10 @@ PrefabInstance:
     - target: {fileID: 4291612561408622614, guid: 5f6cb5217cfc8fd41bde15eb325120e4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7799283333823705734, guid: 5f6cb5217cfc8fd41bde15eb325120e4, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5f6cb5217cfc8fd41bde15eb325120e4, type: 3}
@@ -13889,6 +14069,18 @@ PrefabInstance:
     - target: {fileID: -7175893615602476119, guid: e9b5fbd7c27832549a5df5a0bcc89488, type: 3}
       propertyPath: ObservedComponents.Array.size
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -4068201613604119606, guid: e9b5fbd7c27832549a5df5a0bcc89488, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -4068201613604119606, guid: e9b5fbd7c27832549a5df5a0bcc89488, type: 3}
+      propertyPath: ParentGrid
+      value: 
+      objectReference: {fileID: 1421499272}
+    - target: {fileID: -1480845482379877330, guid: e9b5fbd7c27832549a5df5a0bcc89488, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2112506795772796403, guid: e9b5fbd7c27832549a5df5a0bcc89488, type: 3}
       propertyPath: m_Layer
@@ -14058,7 +14250,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-173058
+  m_Name: pb_Mesh-367344
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2

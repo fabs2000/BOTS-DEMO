@@ -43,11 +43,12 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
     private float _remainingPrepDuration, _remainingTurnDuration;
     private int _localPlayerID;
 
+    private bool _gameEnded = false;
+
     #endregion
 
     #region Custom Event Callbacks
-
-    //[NonSerialized] public readonly UnityEvent OnBeginPreparationCallbacks = new UnityEvent();
+    
     [NonSerialized] public readonly UnityEvent OnBeginGameCallbacks = new UnityEvent();
     [NonSerialized] public readonly UnityEvent OnBeginTurnCallbacks = new UnityEvent();
     [NonSerialized] public readonly UnityEvent OnEndTurnCallbacks = new UnityEvent();
@@ -80,7 +81,6 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
     #endregion
 
     #region PublicFunctions
-
     public void BeginGame()
     {
         //Begin game Callbacks
@@ -93,12 +93,10 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
         if (PlayerTurnID == _localPlayerID)
             StartCoroutine(BeginTurn());
     }
-
     public void BeginPreparationStage()
     {
         StartCoroutine(BeginPreparation());
     }
-
     public void EndPlayerTurn()
     {
         StopAllCoroutines();
@@ -112,7 +110,6 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
         //Relays to all clients that it is now the next player's turn
         photonView.RPC("NextPlayerTurn", RpcTarget.All);
     }
-
     public float GetRemainingTime()
     {
         if (State == GameState.IN_PROGRESS)
@@ -126,6 +123,12 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
 
         return 0f;
     }
+    public void EndGame()
+    {
+        _gameEnded = true;
+        StopAllCoroutines();
+        //photonView.RPC("StopGame", RpcTarget.All);
+    }
 
     #endregion
 
@@ -134,27 +137,33 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     private void NextPlayerTurn()
     {
-        if (PlayerTurnID < PhotonNetwork.CurrentRoom.MaxPlayers)
+        if (!_gameEnded)
         {
-            //Set the turn for the next player in line
-            PlayerTurnID++;
+            if (PlayerTurnID < PhotonNetwork.CurrentRoom.MaxPlayers)
+            {
+                //Set the turn for the next player in line
+                PlayerTurnID++;
+            }
+            else
+            {
+                //If the turn is at the last player, set back to host
+                PlayerTurnID = 1;
+            }
+
+            TurnNumber++;
+
+            if (PlayerTurnID == _localPlayerID)
+                StartCoroutine(BeginTurn());
         }
         else
         {
-            //If the turn is at the last player, set back to host
-            PlayerTurnID = 1;
+            print("Game Ended");
         }
-
-        TurnNumber++;
-
-        if (PlayerTurnID == _localPlayerID)
-            StartCoroutine(BeginTurn());
     }
 
     #endregion
 
     #region Coroutines
-
     private IEnumerator BeginTurn()
     {
         OnBeginTurnCallbacks.Invoke();
@@ -174,7 +183,6 @@ public class TurnBasedSystem : MonoBehaviourPunCallbacks, IPunObservable
 
         yield return null;
     }
-
     private IEnumerator BeginPreparation()
     {
         State = GameState.PREPARATION;

@@ -22,20 +22,21 @@ public class ShipBehavior : MonoBehaviourPun
     
     private TileBehavior _tileShip;
     private PlayerManager _playerManager;
-    private Vector3 _startPos;
 
-    //New 
-    private TileBehavior[] _tiles;
+    //Old 
     private int _boatLength;
+
+    private bool m_HitDetect;
+    private RaycastHit m_Hit;
 
     #endregion
 
     #region Public Variables
-
+    
     public ShipBehavior CloneShip;
     public ShipType ShipClass;
     public int ActionCooldown = 0;
-    
+
     public TileBehavior TileShip
     {
         get => _tileShip;
@@ -50,9 +51,8 @@ public class ShipBehavior : MonoBehaviourPun
     void Start()
     {
         _playerManager = PlayerManager.Instance;
-        _startPos = transform.position;
-
-        //New
+        
+        //Old
         switch (ShipClass)
         {
             case ShipType.CARRIER:
@@ -76,26 +76,6 @@ public class ShipBehavior : MonoBehaviourPun
                 break;
         }
     }
-    
-    // private void Update()
-    // {
-    //     if (photonView.IsMine)
-    //     {
-    //         if (Input.GetMouseButtonDown(1))
-    //         {
-    //             if (_playerManager.SelectedShip == this 
-    //                 && TurnBasedSystem.Instance.State == TurnBasedSystem.GameState.PREPARATION)
-    //             {
-    //                 transform.SetPositionAndRotation(_startPos, Quaternion.identity);
-    //             }
-    //             else
-    //             {
-    //                 Debug.Log("Can't reset ships, they are locked!");
-    //             }
-    //         }
-    //     }
-    // }
-    
     private void OnMouseDown()
     {
         if (!photonView.IsMine)
@@ -112,19 +92,30 @@ public class ShipBehavior : MonoBehaviourPun
             }
         }
     }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Tile"))
-        {
-            TileBehavior tile = other.GetComponent<TileBehavior>();
-
-            if (tile)
-            {
-                tile.RegisterShipOnTile(gameObject);
-            }
-        }
-    }
+    // private void OnTriggerEnter(Collider other)
+    // {
+    //     if (other.gameObject.CompareTag("Tile"))
+    //     {
+    //         TileBehavior tile = other.GetComponent<TileBehavior>();
+    //
+    //         if (tile)
+    //         {
+    //             tile.RegisterShipOnTile(gameObject);
+    //         }
+    //     }
+    // }
+    // private void OnTriggerExit(Collider other)
+    // {
+    //     if (other.gameObject.CompareTag("Tile"))
+    //     {
+    //         TileBehavior tile = other.GetComponent<TileBehavior>();
+    //
+    //         if (tile)
+    //         {
+    //             tile.UnRegisterTile();
+    //         }
+    //     }
+    // }
 
     #endregion
     

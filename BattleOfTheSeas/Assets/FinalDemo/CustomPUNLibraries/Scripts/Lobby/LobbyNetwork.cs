@@ -88,7 +88,7 @@ public class LobbyNetwork : MonoBehaviourPunCallbacks
             GameObject roomDisplay = Instantiate(_roomDisplayTemplate, layoutGroup.transform);
             roomDisplay.GetComponentInChildren<TextMeshProUGUI>().text = roomName;
 
-            _roomList.Add(roomDisplay);
+             _roomList.Add(roomDisplay);
         }
     }
     public void DestroyRooms()

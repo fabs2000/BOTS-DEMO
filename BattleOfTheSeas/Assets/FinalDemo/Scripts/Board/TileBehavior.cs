@@ -34,7 +34,6 @@ public class TileBehavior : MonoBehaviourPun
     #region Public Variables
 
     public bool HasShip = false;
-    
     public GridBehaviour ParentGrid
     {
         get => _parentGrid;
@@ -61,13 +60,13 @@ public class TileBehavior : MonoBehaviourPun
         _renderer = GetComponent<MeshRenderer>();
         _missile = transform.GetChild(0).gameObject;
     }
-    
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Ship"))
         {
             _shipRef = other.gameObject;
             HasShip = true;
+            //ChangeTileColor(Color.magenta);
         }
     }
     private void OnTriggerExit(Collider other)
@@ -76,9 +75,9 @@ public class TileBehavior : MonoBehaviourPun
         {
             _shipRef = null;
             HasShip = false;
+            //ChangeTileColor(Color.blue);
         }
     }
-    
     private void OnMouseDown()
     {
         //<<MAIN GAMEPLAY LOOP>>//
@@ -86,8 +85,6 @@ public class TileBehavior : MonoBehaviourPun
         {
             if (_playerManager.Action != PlayerManager.ActionType.NO_ACTION)
             {
-                print("Tile ID: " + _tileID);
-
                 //Replicate Actions on Selected Tile
                 photonView.RPC("TileAction", RpcTarget.AllBuffered);
 
@@ -117,55 +114,41 @@ public class TileBehavior : MonoBehaviourPun
     #endregion
 
     #region Public Functions
-
-    // public void CheckForShip()
-    // {
-    //     RaycastHit hit;
-    //     
-    //     if (Physics.Raycast(transform.position, 
-    //         transform.TransformDirection(Vector3.up), out hit,1f))
-    //     {
-    //         Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.up) * hit.distance, Color.red, 10f , false);
-    //         
-    //         GameObject objectHit = hit.collider.gameObject;
-    //     
-    //         if (objectHit == this.gameObject)
-    //             return;
-    //         
-    //         if (objectHit.CompareTag("Ship"))
-    //         {
-
-    //         }
-    //     }
-    //     else
-    //     {
-    //         _shipRef = null;
-    //         HasShip = false;
-    //             
-    //         ChangeTileColor(Color.blue);
-    //     }
-    // }
-
+    
+    //Old version
     public void RegisterShipOnTile()
     {
         HasShip = true;
-        ChangeTileColor(Color.magenta);
     }
-
     
-    public void RegisterShipOnTile(GameObject ship)
+    public void CheckForShip()
     {
-        _shipRef = ship;
-        HasShip = true;
-        ChangeTileColor(Color.magenta);
+        RaycastHit hit;
+        
+        if (Physics.Raycast(transform.position, 
+            transform.TransformDirection(Vector3.up), out hit,1f))
+        {
+            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.up) * hit.distance, Color.red, 10f , false);
+            
+            print("HITS");
+            
+            GameObject objectHit = hit.collider.gameObject;
+        
+            if (objectHit == gameObject)
+                return;
+            
+            if (objectHit.CompareTag("Ship"))
+            {
+                RegisterShipOnTile(gameObject);
+            }
+        }
+        else
+        {
+            UnRegisterTile();
+        }
     }
-
-    private void UnRegisterTile()
-    {
-        HasShip = true;
-        ChangeTileColor(Color.blue);
-    }
-
+    
+    //Tile Actions
     public void AttackTile()
     {
         if (_tileState == TileState.TILE_DESTROYED || _tileState == TileState.UNTARGETABLE)
@@ -224,6 +207,20 @@ public class TileBehavior : MonoBehaviourPun
             }
         }
     }
+    
+    public void RegisterShipOnTile(GameObject ship)
+    {
+        _shipRef = ship;
+        HasShip = true;
+        ChangeTileColor(Color.magenta);
+    }
+
+    public void UnRegisterTile()
+    {
+        _shipRef = null;
+        HasShip = false;
+        ChangeTileColor(Color.blue);
+    }
 
     #endregion
 
@@ -247,11 +244,12 @@ public class TileBehavior : MonoBehaviourPun
     {
         _renderer.material.color = newColor;
     }
+    
     private void ResetState()
     {
         if (_tileState == TileState.UNTARGETABLE)
         {
-            _maxUntargetableRounds--;
+            --_maxUntargetableRounds;
 
             if (_maxUntargetableRounds == 0)
             {
